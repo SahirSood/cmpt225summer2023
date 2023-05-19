@@ -56,6 +56,32 @@ class Wordlist : public Wordlist_base
 
     public:
     
+        Wordlist(){
+            struct Node* head = nullptr;
+            head = new Node;
+            head->next = nullptr;
+            // didnt account for count, do this later
+        }
+
+        Wordlist (string file_name){
+            struct Node* curNode = head;
+            
+            ifstream file_(file_name);
+            if(file_.is_open())
+            {
+                while(getline(file_, line_)){
+                      
+                }
+
+
+
+                file_.close();
+            }
+
+        }
+        
+
+
         int num_different_words(){
 
         }
