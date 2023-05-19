@@ -7,9 +7,9 @@
 // Student Info
 // ------------
 //
-// Name : <put your full name here!>
-// St.# : <put your full SFU student number here>
-// Email: <put your SFU email address here>
+// Name : <Sahir Sood>
+// St.# : <301462135>
+// Email: <ssa434@sfu.ca>
 //
 //
 // Statement of Originality
@@ -53,8 +53,31 @@ class Wordlist : public Wordlist_base
     };
 
     //
-    // ... your code goes here ...
-    //
+
+    public:
+    
+        int num_different_words(){
+
+        }
+
+        int total_words(){
+
+        }
+
+        bool is_sorted(){
+
+        }
+        
+        string most_frequent(){
+
+        }
+        int num_singletons(){
+            
+        }
+
+    ~Wordlist(){
+
+    }
 
     //
     // ... you can write helper methods if you need them ...

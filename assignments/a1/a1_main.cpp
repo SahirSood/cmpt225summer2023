@@ -34,21 +34,21 @@
 // Wordlist class. You should add your own tests for each method as you go. Call
 // it every time you run the program.
 //
-// void test_wordlist()
-// {
-//     cout << "test_wordlist() called ...\n";
-//     Wordlist lst;
-//     assert(lst.num_different_words() == 0);
-//     assert(lst.total_words() == 0);
-//     assert(lst.is_sorted());
-//     assert(!lst.contains("hello"));
-//
-//     // ... add more tests: test all methods! ...
-//
-//     cout << "... test_wordlist() done: all tests passed!\n";
-// }
+void test_wordlist()
+{
+    cout << "test_wordlist() called ...\n";
+    Wordlist lst;
+    assert(lst.num_different_words() == 0);
+    assert(lst.total_words() == 0);
+    assert(lst.is_sorted());
+    assert(!lst.contains("hello"));
+
+    // ... add more tests: test all methods! ...
+
+    cout << "... test_wordlist() done: all tests passed!\n";
+}
 
 int main()
-{
+{   test_wordlist;
     cout << "Welcome to assignment 1!\n";
 }
