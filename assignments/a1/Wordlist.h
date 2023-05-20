@@ -61,35 +61,44 @@ class Wordlist : public Wordlist_base
 
         Wordlist (string file_name){
             
-            Node* newnode = new Node;
-            head = newnode;
-            Node* curNode = head;
-
-            std::string line_;
+            Node* newnode;
+            std::string word_;
             ifstream file_(file_name);
             if(file_.is_open())
             {
-                while(getline(file_, line_)){
-                    if(contains(line_)){
-                        
+                while(file_ >> word_){
+                    Node* curNode = head;
+                    while(curNode != nullptr){
+                        if(curNode->word == word_){
+                            curNode->count++;
+                            break;
+                            }
+                        curNode = curNode->next;
+                        }
+                    if(curNode==nullptr){
+                        newnode = new Node;
+                        newnode->word = word_;
+                        newnode->count = 1;
+                        newnode->next = nullptr;
+                        if(head== curNode){
+                            head = newnode;
+                        }     
+                        else {
+                            curNode = head;
+                            while (curNode->next != nullptr) {
+                                curNode = curNode->next;
+                            }
+                            curNode->next = newnode;
+                         }
                     }
-                   
-                    else{
-                        curNode ->word = line_;
-                        newnode= new Node;
-                        curNode->next = newnode;
-                        newnode = nullptr;}
-                    }
+                 }
                 file_.close();
             }
             else{
-                cerr << "Error opening file: " << file_name << endl;
-
+                cerr << "Error opening file: " << file_name << endl;\
             }
         }
-
-
-        int get_count(const string &w){
+         int get_count(const string &w)const{
             Node* curNode = head;
             while (curNode != nullptr){
                 if (curNode->word == w){
@@ -103,28 +112,61 @@ class Wordlist : public Wordlist_base
         }
 
 
-        int num_different_words(){
-
+        int num_different_words()const{
+            int total = 0;
+            Node*curNode = head;
+            while(curNode!=nullptr){
+                total++;
+                curNode = curNode->next;
+            }
+            return total;
         }
 
-        int total_words(){
-
+        int total_words()const{
+            int total = 0;
+            Node*curNode = head;
+            while(curNode!=nullptr){
+                total+=curNode->count;
+                curNode = curNode->next;
+            }
+            return total;
         }
 
-        bool is_sorted(){
-
+        bool is_sorted()const{
+            return 0;
         }
         
-        string most_frequent(){
+        string most_frequent()const{
+            int max = 0;
+            string ret;
 
+            Node*curNode = head;
+            while(curNode!=nullptr){
+                if(curNode->count> max){
+                    ret = curNode->word;
+                    max = curNode->count;
+                }
+            curNode = curNode->next;
+            }
+            return ret;
         }
-        int num_singletons(){
-            
+        int num_singletons()const{
+            int total = 0;
+            Node*curNode = head;
+            while(curNode!=nullptr){
+                if(curNode->count == 1){
+                    total++;
+                }
+            }
+            return total;
+        }
+        void add_word(const string &w)const{
+            return;
         }
 
-    ~Wordlist(){
+        void print_words()const{};
 
-    }
+    ~Wordlist(){}
 
     //
     // ... you can write helper methods if you need them ...
