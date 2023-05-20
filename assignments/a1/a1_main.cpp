@@ -16,17 +16,17 @@
 //           Most frequent word: the 5437
 //         Number of singletons: 14919 (58%)
 //
-// void test_read()
-// {
-//     Wordlist lst;
-//     string w;
-//     while (cin >> w)
-//     {
-//         lst.add_word(w);
-//     }
-//
-//     lst.print_stats();
-// }
+void test_read()
+{
+    Wordlist lst;
+    string w;
+    while (cin >> w)
+    {
+        lst.add_word(w);
+    }
+
+    lst.print_stats();
+}
 
 
 //

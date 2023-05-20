@@ -52,34 +52,55 @@ class Wordlist : public Wordlist_base
         Node *next;
     };
 
-    //
+    Node* head = nullptr;
+
 
     public:
-    
-        Wordlist(){
-            struct Node* head = nullptr;
-            head = new Node;
-            head->next = nullptr;
-            // didnt account for count, do this later
-        }
+
+        Wordlist(){}
 
         Wordlist (string file_name){
-            struct Node* curNode = head;
             
+            Node* newnode = new Node;
+            head = newnode;
+            Node* curNode = head;
+
+            std::string line_;
             ifstream file_(file_name);
             if(file_.is_open())
             {
                 while(getline(file_, line_)){
-                      
-                }
-
-
-
+                    if(contains(line_)){
+                        
+                    }
+                   
+                    else{
+                        curNode ->word = line_;
+                        newnode= new Node;
+                        curNode->next = newnode;
+                        newnode = nullptr;}
+                    }
                 file_.close();
             }
+            else{
+                cerr << "Error opening file: " << file_name << endl;
 
+            }
         }
-        
+
+
+        int get_count(const string &w){
+            Node* curNode = head;
+            while (curNode != nullptr){
+                if (curNode->word == w){
+                    return curNode->count;
+                }
+                else{
+                    curNode = curNode->next;
+                }
+            }
+            return 0;
+        }
 
 
         int num_different_words(){
