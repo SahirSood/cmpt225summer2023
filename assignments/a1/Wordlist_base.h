@@ -54,7 +54,7 @@ struct Wordlist_base
 
     //
     // Returns the number of nodes with count 1.
-    //
+    //  
     virtual int num_singletons() const = 0;
 
     //

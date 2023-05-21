@@ -80,15 +80,19 @@ class Wordlist : public Wordlist_base
                         newnode->word = word_;
                         newnode->count = 1;
                         newnode->next = nullptr;
-                        if(head== curNode){
+
+                        if(head == nullptr || word_<head->word){
+                            newnode->next =head;
                             head = newnode;
                         }     
                         else {
                             curNode = head;
-                            while (curNode->next != nullptr) {
+                            while (curNode->next != nullptr && curNode->next->word<word_) {
                                 curNode = curNode->next;
                             }
+                            newnode->next = curNode->next;
                             curNode->next = newnode;
+                    
                          }
                     }
                  }
@@ -161,9 +165,35 @@ class Wordlist : public Wordlist_base
             return total;
         }
         void add_word(const string &w)const{
-            return;
-        }
+            Node* curNode = head;
+            while(curNode != nullptr){
+                if(curNode->word == w){
+                    curNode->count++;
+                    break;
+                    }
+                curNode = curNode->next;
+                }
+            if(curNode==nullptr){
+                Node* newnode = new Node;
+                newnode->word = w;
+                newnode->count = 1;
+                newnode->next = nullptr;
 
+                if(head == nullptr || w<head->word){
+                    newnode->next =head;
+                    head = newnode;
+                }     
+                else {
+                    curNode = head;
+                    while (curNode->next != nullptr && curNode->next->word<w) {
+                        curNode = curNode->next;
+                    }
+                    newnode->next = curNode->next;
+                    curNode->next = newnode;
+            
+                    }
+            }
+        }
         void print_words()const{};
 
     ~Wordlist(){}
