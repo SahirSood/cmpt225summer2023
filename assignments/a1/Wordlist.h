@@ -137,7 +137,21 @@ class Wordlist : public Wordlist_base
         }
 
         bool is_sorted()const{
-            return 0;
+            
+            if (head == nullptr) {
+                return true;
+                }
+            
+            Node*curNode = head; 
+            while(curNode->next!=nullptr){
+                if (curNode->word > curNode->next->word)
+                {
+                    return false;
+                }
+                curNode=curNode->next;
+            }
+            
+            return true;
         }
         
         string most_frequent()const{
@@ -164,7 +178,7 @@ class Wordlist : public Wordlist_base
             }
             return total;
         }
-        void add_word(const string &w)const{
+        void add_word(const string &w){
             Node* curNode = head;
             while(curNode != nullptr){
                 if(curNode->word == w){
@@ -180,7 +194,7 @@ class Wordlist : public Wordlist_base
                 newnode->next = nullptr;
 
                 if(head == nullptr || w<head->word){
-                    newnode->next =head;
+                    newnode->next = head;
                     head = newnode;
                 }     
                 else {
@@ -194,7 +208,12 @@ class Wordlist : public Wordlist_base
                     }
             }
         }
-        void print_words()const{};
+        void print_words()const{
+            Node*curNode = head;
+            while(curNode!=nullptr){
+                cout << curNode->word << endl;
+            }
+        } 
 
     ~Wordlist(){}
 

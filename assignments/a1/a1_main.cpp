@@ -39,16 +39,23 @@ void test_wordlist()
     cout << "test_wordlist() called ...\n";
     Wordlist lst;
     assert(lst.num_different_words() == 0);
-    assert(lst.total_words() == 0);
-    assert(lst.is_sorted());
-    assert(!lst.contains("hello"));
+    cout << "1\n";
 
-    // ... add more tests: test all methods! ...
+    assert(lst.total_words() == 0);
+    cout << "2\n";
+
+    assert(lst.is_sorted());
+    cout << "3\n";
+
+    assert(!lst.contains("hello"));
+    cout << "4\n";
 
     cout << "... test_wordlist() done: all tests passed!\n";
 }
 
 int main()
-{   test_wordlist;
+{   
+    test_read();
+    test_wordlist();
     cout << "Welcome to assignment 1!\n";
 }
