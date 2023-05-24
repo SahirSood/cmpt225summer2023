@@ -19,12 +19,17 @@
 void test_read()
 {
     Wordlist lst;
+    cout<<"test main"<<endl;
+
     string w;
+    cout<<"test main 2"<<endl;
+    
     while (cin >> w)
     {
+        cout<<"enters main while"<<endl;
         lst.add_word(w);
     }
-
+    cout<<"Before print stats"<<endl;
     lst.print_stats();
 }
 
@@ -49,6 +54,7 @@ void test_wordlist()
 
     assert(!lst.contains("hello"));
     cout << "4\n";
+
 
     cout << "... test_wordlist() done: all tests passed!\n";
 }

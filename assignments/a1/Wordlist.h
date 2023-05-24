@@ -183,6 +183,7 @@ class Wordlist : public Wordlist_base
             while(curNode != nullptr){
                 if(curNode->word == w){
                     curNode->count++;
+                    
                     break;
                     }
                 curNode = curNode->next;
@@ -201,6 +202,8 @@ class Wordlist : public Wordlist_base
                     curNode = head;
                     while (curNode->next != nullptr && curNode->next->word<w) {
                         curNode = curNode->next;
+                        ;
+
                     }
                     newnode->next = curNode->next;
                     curNode->next = newnode;
