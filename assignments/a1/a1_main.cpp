@@ -18,18 +18,13 @@
 //
 void test_read()
 {
-    Wordlist lst;
-    cout<<"test main"<<endl;
-
-    string w;
-    cout<<"test main 2"<<endl;
+    Wordlist lst("small.txt");
+    // string w;
     
-    while (cin >> w)
-    {
-        cout<<"enters main while"<<endl;
-        lst.add_word(w);
-    }
-    cout<<"Before print stats"<<endl;
+    // while (cin >> w)
+    // {
+    //     lst.add_word(w);
+    // }
     lst.print_stats();
 }
 
@@ -44,17 +39,12 @@ void test_wordlist()
     cout << "test_wordlist() called ...\n";
     Wordlist lst;
     assert(lst.num_different_words() == 0);
-    cout << "1\n";
 
     assert(lst.total_words() == 0);
-    cout << "2\n";
 
     assert(lst.is_sorted());
-    cout << "3\n";
 
     assert(!lst.contains("hello"));
-    cout << "4\n";
-
 
     cout << "... test_wordlist() done: all tests passed!\n";
 }

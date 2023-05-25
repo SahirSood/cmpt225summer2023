@@ -175,6 +175,7 @@ class Wordlist : public Wordlist_base
                 if(curNode->count == 1){
                     total++;
                 }
+                curNode = curNode->next;
             }
             return total;
         }
