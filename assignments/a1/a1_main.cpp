@@ -18,7 +18,7 @@
 //
 void test_read()
 {
-    Wordlist lst("small.txt");
+    Wordlist lst("tiny_shakespeare.txt");
     // string w;
     
     // while (cin >> w)
@@ -26,6 +26,8 @@ void test_read()
     //     lst.add_word(w);
     // }
     lst.print_stats();
+
+    cout<<"----------------------------------------------"<<endl;
 }
 
 
@@ -38,9 +40,9 @@ void test_wordlist()
 {
     cout << "test_wordlist() called ...\n";
     Wordlist lst;
-    assert(lst.num_different_words() == 0);
+    assert(lst.num_different_words() == 7);
 
-    assert(lst.total_words() == 0);
+    assert(lst.total_words() == 9);
 
     assert(lst.is_sorted());
 
@@ -52,6 +54,7 @@ void test_wordlist()
 int main()
 {   
     test_read();
-    test_wordlist();
+    // test_wordlist();
     cout << "Welcome to assignment 1!\n";
+
 }

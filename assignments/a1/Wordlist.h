@@ -61,40 +61,40 @@ class Wordlist : public Wordlist_base
 
         Wordlist (string file_name){
             
-            Node* newnode;
             std::string word_;
             ifstream file_(file_name);
             if(file_.is_open())
             {
                 while(file_ >> word_){
-                    Node* curNode = head;
-                    while(curNode != nullptr){
-                        if(curNode->word == word_){
-                            curNode->count++;
-                            break;
-                            }
-                        curNode = curNode->next;
-                        }
-                    if(curNode==nullptr){
-                        newnode = new Node;
-                        newnode->word = word_;
-                        newnode->count = 1;
-                        newnode->next = nullptr;
+                    add_word(word_);    
+                    // Node* curNode = head;
+                    // while(curNode != nullptr){
+                    //     if(curNode->word == word_){
+                    //         curNode->count++;
+                    //         break;
+                    //         }
+                    //     curNode = curNode->next;
+                    //     }
+                    // if(curNode==nullptr){
+                    //     newnode = new Node;
+                    //     newnode->word = word_;
+                    //     newnode->count = 1;
+                    //     newnode->next = nullptr;
 
-                        if(head == nullptr || word_<head->word){
-                            newnode->next =head;
-                            head = newnode;
-                        }     
-                        else {
-                            curNode = head;
-                            while (curNode->next != nullptr && curNode->next->word<word_) {
-                                curNode = curNode->next;
-                            }
-                            newnode->next = curNode->next;
-                            curNode->next = newnode;
+                    //     if(head == nullptr || word_<head->word){
+                    //         newnode->next =head;
+                    //         head = newnode;
+                    //     }     
+                    //     else {
+                    //         curNode = head;
+                    //         while (curNode->next != nullptr && curNode->next->word<word_) {
+                    //             curNode = curNode->next;
+                    //         }
+                    //         newnode->next = curNode->next;
+                    //         curNode->next = newnode;
                     
-                         }
-                    }
+                    //      }
+                    // }
                  }
                 file_.close();
             }
@@ -215,7 +215,8 @@ class Wordlist : public Wordlist_base
         void print_words()const{
             Node*curNode = head;
             while(curNode!=nullptr){
-                cout << curNode->word << endl;
+                cout << "{" << "\""<< curNode->word<<"\"" <<curNode->count << "}"<<endl;
+                curNode = curNode->next;
             }
         } 
 
