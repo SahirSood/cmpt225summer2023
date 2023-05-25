@@ -220,7 +220,18 @@ class Wordlist : public Wordlist_base
             }
         } 
 
-    ~Wordlist(){}
+    ~Wordlist(){
+        Node* curNode = head;
+        Node* del = head;
+        
+        while (curNode->next != nullptr)
+        {
+            del = curNode;
+            curNode = curNode->next;
+            delete del;
+        }
+        delete curNode;
+    }
 
     //
     // ... you can write helper methods if you need them ...

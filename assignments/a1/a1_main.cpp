@@ -54,7 +54,7 @@ void test_wordlist()
 int main()
 {   
     test_read();
-    // test_wordlist();
+    test_wordlist();
     cout << "Welcome to assignment 1!\n";
 
 }
