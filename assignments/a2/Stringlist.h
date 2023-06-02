@@ -5,9 +5,9 @@
 // Student Info
 // ------------
 //
-// Name : <put your full name here!>
-// St.# : <put your full SFU student number here>
-// Email: <put your SFU email address here>
+// Name : <Sahir Sood>
+// St.# : <301462135>
+// Email: <ssa434@sfu.ca>
 //
 //
 // Statement of Originality
@@ -38,6 +38,16 @@ using namespace std;
 
 class Stringlist
 {
+    
+    struct Node {
+    int data;
+    struct Node *next;
+    };
+
+    struct Node* Top = nullptr;
+
+
+
     int cap;     // capacity
     string *arr; // array of strings
     int sz;      // size
@@ -97,7 +107,6 @@ public:
         : cap(10), arr(new string[cap]), sz(0)
     {
     }
-
     //
     // Copy constructor: makes a copy of the given StringList.
     //
