@@ -231,10 +231,40 @@ public:
     {
         check_bounds("set", index);
         arr[index] = value;
+<<<<<<< HEAD
 x);
         arr[index] = value;
        
 le
+=======
+    }
+
+    //
+    // Insert s before index; if necessary, the capacity of the underlying array
+    // is doubled.
+    //
+    // undoable
+    //
+    void insert_before(int index, const string &s)
+    {
+        if (index < 0 || index > sz) // allows insert at end, i == sz
+            bounds_error("insert_before");
+        check_capacity();
+
+        for (int i = sz; i > index; i--)
+        {
+            arr[i] = arr[i - 1];
+        }
+        arr[index] = s;
+        sz++;
+    }
+
+    //
+    // Appends s to the end of the list; if necessary, the capacity of the
+    // underlying array is doubled.
+    //
+    // undoable
+>>>>>>> parent of 37c718a (shit)
     //
     void insert_back(const string &s)
     {
