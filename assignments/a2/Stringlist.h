@@ -40,9 +40,7 @@ class Stringlist
 {
     
     struct Node {
-    std::string data;
-    int size;
-    string* array = new string[size];
+    int data;
     struct Node *next;
     };
 
@@ -108,7 +106,6 @@ public:
     Stringlist()
         : cap(10), arr(new string[cap]), sz(0)
     {
-
     }
     //
     // Copy constructor: makes a copy of the given StringList.
@@ -128,29 +125,6 @@ public:
     {
         delete[] arr;
     }
-
-
-    void push(){
-        Node* newnode = new Node;
-
-        newnode->size = size();
-        newnode->array = arr;
-        newnode->next = Top;
-        Top = newnode;
-    }
-
-    string pop(){
-        if(Top == nullptr){
-            return nullptr;
-        }
-        string ret = Top -> data;
-        Node* temp = Top;
-        Top = Top->next;
-        delete temp;
-
-        return ret; 
-    }
-
 
     //
     // Assignment operator: makes a copy of the given StringList.
@@ -205,7 +179,7 @@ public:
     //
     string get(int index) const
     {
-        check_bounds("get", index);     
+        check_bounds("get", index);
         return arr[index];
     }
 
@@ -257,34 +231,10 @@ public:
     {
         check_bounds("set", index);
         arr[index] = value;
+x);
+        arr[index] = value;
        
-    }
-
-    //
-    // Insert s before index; if necessary, the capacity of the underlying array
-    // is doubled.
-    //
-    // undoable
-    //
-    void insert_before(int index, const string &s)
-    {
-        if (index < 0 || index > sz) // allows insert at end, i == sz
-            bounds_error("insert_before");
-        check_capacity();
-
-        for (int i = sz; i > index; i--)
-        {
-            arr[i] = arr[i - 1];
-        }
-        arr[index] = s;
-        sz++;
-    }
-
-    //
-    // Appends s to the end of the list; if necessary, the capacity of the
-    // underlying array is doubled.
-    //
-    // undoable
+le
     //
     void insert_back(const string &s)
     {
