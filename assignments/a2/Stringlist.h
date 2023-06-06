@@ -40,7 +40,9 @@ class Stringlist
 {
     
     struct Node {
-    int data;
+    std::string data;
+    int size;
+    string* array = new string[size];
     struct Node *next;
     };
 
@@ -106,6 +108,7 @@ public:
     Stringlist()
         : cap(10), arr(new string[cap]), sz(0)
     {
+
     }
     //
     // Copy constructor: makes a copy of the given StringList.
@@ -125,6 +128,29 @@ public:
     {
         delete[] arr;
     }
+
+
+    void push(){
+        Node* newnode = new Node;
+
+        newnode->size = size();
+        newnode->array = arr;
+        newnode->next = Top;
+        Top = newnode;
+    }
+
+    string pop(){
+        if(Top == nullptr){
+            return nullptr;
+        }
+        string ret = Top -> data;
+        Node* temp = Top;
+        Top = Top->next;
+        delete temp;
+
+        return ret; 
+    }
+
 
     //
     // Assignment operator: makes a copy of the given StringList.
@@ -179,7 +205,7 @@ public:
     //
     string get(int index) const
     {
-        check_bounds("get", index);
+        check_bounds("get", index);     
         return arr[index];
     }
 
@@ -231,6 +257,7 @@ public:
     {
         check_bounds("set", index);
         arr[index] = value;
+       
     }
 
     //
