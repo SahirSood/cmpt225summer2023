@@ -232,11 +232,14 @@ public:
         check_bounds("set", index);
         arr[index] = value;
 <<<<<<< HEAD
+<<<<<<< HEAD
 x);
         arr[index] = value;
        
 le
 =======
+=======
+>>>>>>> parent of 37c718a (shit)
     }
 
     //
