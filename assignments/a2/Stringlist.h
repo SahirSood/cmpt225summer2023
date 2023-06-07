@@ -40,9 +40,9 @@ class Stringlist
 {
     
     struct Node {
-    void (*fn)(void*);
+    int data;
     struct Node *next;
-    }; 
+    };
 
     struct Node* Top = nullptr;
 
@@ -99,26 +99,6 @@ class Stringlist
         }
     }
 
-    void push(void(*call_function)){
-        Node* newnode = new Node;
-        newnode->next = Top;
-        Top = newnode;
-        Top->fn = call_function;
-    }
-
-    void* pop(){
-        if(Top == nullptr){
-            return nullptr;
-        }
-        void* ret = Top -> fn;
-        Node* temp = Top;
-        Top = Top->next;
-        delete temp;
-
-        return ret; 
-    }
-
-
 public:
     //
     // Default constructor: makes an empty StringList.
@@ -126,7 +106,6 @@ public:
     Stringlist()
         : cap(10), arr(new string[cap]), sz(0)
     {
-
     }
     //
     // Copy constructor: makes a copy of the given StringList.
@@ -146,9 +125,6 @@ public:
     {
         delete[] arr;
     }
-
-
- 
 
     //
     // Assignment operator: makes a copy of the given StringList.
@@ -203,7 +179,7 @@ public:
     //
     string get(int index) const
     {
-        check_bounds("get", index);     
+        check_bounds("get", index);
         return arr[index];
     }
 
@@ -254,10 +230,7 @@ public:
     void set(int index, string value)
     {
         check_bounds("set", index);
-        string undoVAL = arr[index];
         arr[index] = value;
-        push((void*)set(index, undoVAL));
-        
     }
 
     //
@@ -278,7 +251,6 @@ public:
         }
         arr[index] = s;
         sz++;
-        push((void*)remove_at(index-1));
     }
 
     //
@@ -290,8 +262,6 @@ public:
     void insert_back(const string &s)
     {
         insert_before(size(), s);
-        push((void*)remove_at(size()-1));
-
     }
 
     //
@@ -303,8 +273,6 @@ public:
     void insert_front(const string &s)
     {
         insert_before(0, s);
-        push((void*)remove_at(0));
-
     }
 
     //
@@ -316,14 +284,10 @@ public:
     {
         check_bounds("remove_at", index);
         for (int i = index; i < sz - 1; i++)
-        const string* ret = &arr[index]
         {
             arr[i] = arr[i + 1];
         }
-        
         sz--;
-        
-        push((void*)insert_before(index, ))
     }
 
     //
