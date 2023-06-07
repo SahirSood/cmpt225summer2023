@@ -40,7 +40,7 @@ class Stringlist
 {
     
     struct Node {
-    int data;
+    std::string data;
     struct Node *next;
     };
 
@@ -106,6 +106,7 @@ public:
     Stringlist()
         : cap(10), arr(new string[cap]), sz(0)
     {
+
     }
     //
     // Copy constructor: makes a copy of the given StringList.
@@ -125,6 +126,27 @@ public:
     {
         delete[] arr;
     }
+
+
+    void push(){
+        Node* newnode = new Node;
+
+        newnode->next = Top;
+        Top = newnode;
+    }
+
+    string pop(){
+        if(Top == nullptr){
+            return nullptr;
+        }
+        string ret = Top -> data;
+        Node* temp = Top;
+        Top = Top->next;
+        delete temp;
+
+        return ret; 
+    }
+
 
     //
     // Assignment operator: makes a copy of the given StringList.
@@ -179,7 +201,7 @@ public:
     //
     string get(int index) const
     {
-        check_bounds("get", index);
+        check_bounds("get", index);     
         return arr[index];
     }
 
@@ -231,15 +253,7 @@ public:
     {
         check_bounds("set", index);
         arr[index] = value;
-<<<<<<< HEAD
-<<<<<<< HEAD
-x);
-        arr[index] = value;
        
-le
-=======
-=======
->>>>>>> parent of 37c718a (shit)
     }
 
     //
@@ -267,7 +281,6 @@ le
     // underlying array is doubled.
     //
     // undoable
->>>>>>> parent of 37c718a (shit)
     //
     void insert_back(const string &s)
     {
