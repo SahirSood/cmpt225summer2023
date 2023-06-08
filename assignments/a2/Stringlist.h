@@ -38,20 +38,24 @@ using namespace std;
 
 class Stringlist
 {
-    
+    //Stack that holds strings as its data
     struct Node {
     string data;
     struct Node *next;
     };
-
+    // initialize the stack by making the top = nullptr
     struct Node* Top = nullptr;
 
 
 
     int cap;     // capacity
     string *arr; // array of strings
-    string* arrCopy;
     int sz;      // size
+    
+    //flags so code can keep tracking of what is calling what.
+    bool calledFromUndo = false;
+    bool ishelper = false;
+
 
     //
     // Helper function for throwing out_of_range exceptions.
@@ -126,18 +130,20 @@ public:
     ~Stringlist()
     {
         delete[] arr;
-        delete[] arrCopy;
 
     }
 
-
+    // Takes in a string and assigns it to a new node
+    // makes the new node the top of the stack
     void push(string call){
+        cout<<"Whats Being Pushed: "<< call << endl;
         Node* newnode = new Node;
         newnode->data = call;
         newnode->next = Top;
         Top = newnode;
     }
 
+    //takes the string at the top of the stack and returns it while also deleting it from memory
     string pop(){
         if(Top == nullptr){
             return nullptr;
@@ -257,11 +263,18 @@ public:
     void set(int index, string value)
     {
         check_bounds("set", index);
+        // saves variable before we delete it
         string keep = arr[index];
         arr[index] = value;
-        string ret = "set " + std::to_string(index) + " " + keep;
-        push(ret);
-    }
+
+        //If set is not called because we need to undo something then it pushes the opposite function to the stack.
+        if (calledFromUndo != true){
+            string ret = "set " + std::to_string(index) + " " + keep;
+            push(ret);}
+
+        //resets flag
+        calledFromUndo = false;
+    }   
 
     //
     // Insert s before index; if necessary, the capacity of the underlying array
@@ -281,9 +294,13 @@ public:
         }
         arr[index] = s;
         sz++;
-
-        string ret = "remove_at " + std::to_string(index);
-        push(ret);
+                
+        //If insert_before  is not called because we need to undo something then it pushes the opposite function to the stack.
+        // Also makes sure it isnt being used as a helper functino because insert_back uses this function
+        if (calledFromUndo != true && ishelper != true){
+            string ret = "remove_at " + std::to_string(index);
+            push(ret);}
+        calledFromUndo = false;
 
     }
 
@@ -295,9 +312,20 @@ public:
     //
     void insert_back(const string &s)
     {
+
+        // before calling insert_before, it tells the code its a helper 
+        ishelper = true;
         insert_before(size(), s);
-        string ret = "reomve_at " + std::to_string(size());
-        push(ret);
+        
+        //if not being called for the purpose of undoing another function
+        if (calledFromUndo != true){
+            string ret = "remove_at " + std::to_string(size()-1);
+            push(ret);
+        }
+        //resets flags
+        calledFromUndo = false;
+        ishelper = false;
+
     }
 
     //
@@ -308,9 +336,19 @@ public:
     //
     void insert_front(const string &s)
     {
+
+        // before calling insert_before, it tells the code its a helper 
+        ishelper = true;
         insert_before(0, s);
-        string ret = "reomve_at " + std::to_string(0);
-        push(ret);
+        
+        // ensures we are not being called for the sake of undoing a previous function.
+        if (calledFromUndo != true){
+            string ret = "remove_at " + std::to_string(0);
+            push(ret);}
+        
+        // reset flags
+        ishelper = false;
+        calledFromUndo = false;
     }
 
     //
@@ -321,15 +359,22 @@ public:
     void remove_at(int index)
     {
         check_bounds("remove_at", index);
+        
+        //string we want to keep
         string keep = arr[index];
+
         for (int i = index; i < sz - 1; i++)
         {
             arr[i] = arr[i + 1];
         }
         sz--;
-
-        string ret = "insert_before " + std::to_string(index) + keep;
-        push(ret);
+        
+        //makes sure we are not being called to undo a previous function.
+        if (calledFromUndo != true && ishelper != true){
+            string ret = "insert_before " + std::to_string(index) + keep;
+            push(ret);
+        }
+        calledFromUndo = false;
 
     }
 
@@ -340,20 +385,36 @@ public:
     //
     void remove_all()
     {
-        arrCopy = new string[sz];
         int retSize = sz;
 
-        for (int i = 0; i < sz; i++)
-        {
-            arrCopy[i] = arr[i];
-        }
+        //string where we will store all the words
+        string result;
 
+        // every word in the array will be saved to result seperated by a whitespace
+        for (int i = 0; i < sz; i++) {
+            result += arr[i];
+            if (i < sz) {
+                result += " ";
+            }
+        }
+        cout<<"RESULT"<<result<<endl;
+
+
+        // so code knows that remove_at is a helper function.
+        ishelper = true;
         while (sz > 0)
         {
             remove_at(sz - 1);
-        }   
-        string ret = "redo_all " + std::to_string(retSize);
-        push(ret);
+        } 
+
+        if (calledFromUndo != true){
+            string ret = "redo_all " + std::to_string(retSize) + " " + result;
+            push(ret);
+        }
+
+        //reset flags
+        calledFromUndo = false;
+        ishelper = false;
 
 
     }
@@ -369,9 +430,19 @@ public:
         int index = index_of(s);
         if (index == -1)
             return false;
-        string ret = "insert_before " + std::to_string(index) + s;
-        push(ret);
+        
+        // makes sure we are not called to undo antoehr function.
+        if (calledFromUndo != true){
+            string ret = "insert_before " + std::to_string(index) + s;
+            push(ret);
+         }
+        // so remove_at knows it is a helper function
+        ishelper = true;
         remove_at(index);
+        
+        //reset flags.
+        calledFromUndo = false;
+        ishelper = false;
         return true;
     }
 
@@ -383,27 +454,34 @@ public:
     //
     bool undo()
     {
-        
+
+        //variables to store substrings of what we pushed
         string command;
         int index;
         string keep;
 
+        // store the instruction
         string instruction = pop();
 
+        // finds the first whitespace and saves all the letters from idnex 0 to the whitespace as the command
         size_t firstspace = instruction.find(' ');
         command = instruction.substr(0,firstspace);
 
+        // from the first whitespace to second whitespace this is the index
         size_t  secondspace = instruction.find(' ', firstspace + 1);
         string indexstr = instruction.substr(firstspace + 1, secondspace - firstspace - 1);
         index = stoi(indexstr);
 
+        // the string we are transferring is to the end
         keep = instruction.substr(secondspace+1);
 
+        calledFromUndo = true;
         if(command == "set"){
             set(index,keep);
             return true;
         }
         else if(command == "remove_at"){
+            cout<<index<<endl;
             remove_at(index);
             return true;
         }
@@ -412,15 +490,29 @@ public:
             return true;
         }
         else if(command == "redo_all"){
-            for (int i = index - 1; i >= 0; i--)
+            int j = -1;
+            for (int i = 0; i < index; i++)
             {
-                insert_front(arrCopy[i]);
+                j++;
+                int startPos = j;  // Starting position of the substring
+                // Find the position of the next space character
+                int endPos = keep.find(' ', j);
+                if (endPos == string::npos)
+                {
+                    // If no space character is found, break or handle it accordingly
+                    break;
+                }
+                int length = endPos - startPos;  // Length of the substring
+                arr[i] = keep.substr(startPos, length);  // Extract the substring and assign it to arr
+                j = endPos;  // Update the current position
+
+                // You can optionally handle any additional logic here if needed
             }
-        }
 
-        return false;
+            return true;        
+         }
+         return false;
     }
-
 }; // class Stringlist
 
 //
