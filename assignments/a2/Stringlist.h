@@ -40,7 +40,7 @@ class Stringlist
 {
     
     struct Node {
-    int data;
+    string data;
     struct Node *next;
     };
 
@@ -106,6 +106,7 @@ public:
     Stringlist()
         : cap(10), arr(new string[cap]), sz(0)
     {
+
     }
     //
     // Copy constructor: makes a copy of the given StringList.
@@ -125,6 +126,28 @@ public:
     {
         delete[] arr;
     }
+
+
+    void push(string call){
+        Node* newnode = new Node;
+        newnode->data = call;
+        newnode->next = Top;
+        Top = newnode;
+    }
+
+    string pop(){
+        if(Top == nullptr){
+            return nullptr;
+        }
+
+        string ret = Top -> data;
+        Node* temp = Top;
+        Top = Top->next;
+        delete temp;
+
+        return ret; 
+    }
+
 
     //
     // Assignment operator: makes a copy of the given StringList.
@@ -177,9 +200,10 @@ public:
     //
     // Returns the string at the given index.
     //
+
     string get(int index) const
     {
-        check_bounds("get", index);
+        check_bounds("get", index);     
         return arr[index];
     }
 
@@ -230,7 +254,10 @@ public:
     void set(int index, string value)
     {
         check_bounds("set", index);
+        string keep = arr[index];
         arr[index] = value;
+        string ret = "set " + std::to_string(index) + " " + keep;
+        push(ret);
     }
 
     //
@@ -251,6 +278,10 @@ public:
         }
         arr[index] = s;
         sz++;
+
+        string ret = "remove_at " + std::to_string(index);
+        push(ret);
+
     }
 
     //
@@ -262,6 +293,8 @@ public:
     void insert_back(const string &s)
     {
         insert_before(size(), s);
+        string ret = "reomve_at " + std::to_string(size());
+        push(ret);
     }
 
     //
@@ -273,6 +306,8 @@ public:
     void insert_front(const string &s)
     {
         insert_before(0, s);
+        string ret = "reomve_at " + std::to_string(0);
+        push(ret);
     }
 
     //
@@ -370,4 +405,4 @@ bool operator==(const Stringlist &a, const Stringlist &b)
 bool operator!=(const Stringlist &a, const Stringlist &b)
 {
     return !(a == b);
-}
+}   
