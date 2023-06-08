@@ -50,6 +50,7 @@ class Stringlist
 
     int cap;     // capacity
     string *arr; // array of strings
+    string* arrCopy;
     int sz;      // size
 
     //
@@ -125,6 +126,8 @@ public:
     ~Stringlist()
     {
         delete[] arr;
+        delete[] arrCopy;
+
     }
 
 
@@ -318,11 +321,16 @@ public:
     void remove_at(int index)
     {
         check_bounds("remove_at", index);
+        string keep = arr[index];
         for (int i = index; i < sz - 1; i++)
         {
             arr[i] = arr[i + 1];
         }
         sz--;
+
+        string ret = "insert_before " + std::to_string(index) + keep;
+        push(ret);
+
     }
 
     //
@@ -332,10 +340,22 @@ public:
     //
     void remove_all()
     {
+        arrCopy = new string[sz];
+        int retSize = sz;
+
+        for (int i = 0; i < sz; i++)
+        {
+            arrCopy[i] = arr[i];
+        }
+
         while (sz > 0)
         {
             remove_at(sz - 1);
-        }
+        }   
+        string ret = "redo_all " + std::to_string(retSize);
+        push(ret);
+
+
     }
 
     //
@@ -349,6 +369,8 @@ public:
         int index = index_of(s);
         if (index == -1)
             return false;
+        string ret = "insert_before " + std::to_string(index) + s;
+        push(ret);
         remove_at(index);
         return true;
     }
@@ -361,7 +383,41 @@ public:
     //
     bool undo()
     {
-        cout << "Stringlist::undo: not yet implemented\n";
+        
+        string command;
+        int index;
+        string keep;
+
+        string instruction = pop();
+
+        size_t firstspace = instruction.find(' ');
+        command = instruction.substr(0,firstspace);
+
+        size_t  secondspace = instruction.find(' ', firstspace + 1);
+        string indexstr = instruction.substr(firstspace + 1, secondspace - firstspace - 1);
+        index = stoi(indexstr);
+
+        keep = instruction.substr(secondspace+1);
+
+        if(command == "set"){
+            set(index,keep);
+            return true;
+        }
+        else if(command == "remove_at"){
+            remove_at(index);
+            return true;
+        }
+        else if(command == "insert_before"){
+            insert_before(index, keep);
+            return true;
+        }
+        else if(command == "redo_all"){
+            for (int i = index - 1; i >= 0; i--)
+            {
+                insert_front(arrCopy[i]);
+            }
+        }
+
         return false;
     }
 
