@@ -77,7 +77,7 @@ void test_copy_constructor()
     assert((lst.to_string()=="{\"pineapple\", \"A\", \"plan\", \"is\"}"));
     lst.remove_all();
     lst.undo();
-    cout<<"the remade list"<<lst<<endl;
+    cout<<"the remade list"<<lst.to_string()<<endl;
     assert((lst.to_string()=="{\"pineapple\", \"A\", \"plan\", \"is\"}"));
 
 

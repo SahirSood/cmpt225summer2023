@@ -136,7 +136,6 @@ public:
     // Takes in a string and assigns it to a new node
     // makes the new node the top of the stack
     void push(string call){
-        cout<<"Whats Being Pushed: "<< call << endl;
         Node* newnode = new Node;
         newnode->data = call;
         newnode->next = Top;
@@ -397,7 +396,6 @@ public:
                 result += " ";
             }
         }
-        cout<<"RESULT"<<result<<endl;
 
 
         // so code knows that remove_at is a helper function.
@@ -462,7 +460,6 @@ public:
 
         // store the instruction
         string instruction = pop();
-
         // finds the first whitespace and saves all the letters from idnex 0 to the whitespace as the command
         size_t firstspace = instruction.find(' ');
         command = instruction.substr(0,firstspace);
@@ -481,7 +478,6 @@ public:
             return true;
         }
         else if(command == "remove_at"){
-            cout<<index<<endl;
             remove_at(index);
             return true;
         }
@@ -491,6 +487,7 @@ public:
         }
         else if(command == "redo_all"){
             int j = -1;
+            cout<<"enters"<<endl;
             for (int i = 0; i < index; i++)
             {
                 j++;
@@ -503,9 +500,9 @@ public:
                     break;
                 }
                 int length = endPos - startPos;  // Length of the substring
+                cout<<keep.substr(startPos, length)<<endl;
                 arr[i] = keep.substr(startPos, length);  // Extract the substring and assign it to arr
                 j = endPos;  // Update the current position
-
                 // You can optionally handle any additional logic here if needed
             }
 
