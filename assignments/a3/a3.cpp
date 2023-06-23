@@ -5,9 +5,9 @@
 // Student Info
 // ------------
 //
-// Name : <put your full name here!>
-// St.# : <put your full SFU student number here>
-// Email: <put your SFU email address here>
+// Name : <Sahir Sood!>
+// St.# : <301462135>
+// Email: <ssa434@sfu.ca>
 //
 //
 // Statement of Originality
