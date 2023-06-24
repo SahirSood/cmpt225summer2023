@@ -37,7 +37,127 @@
 
 using namespace std;
 
-int main()
+
+
+
+
+class Queue : public Queue_base<Announcement>
 {
-    cout << "Welcome to Assignment 3!" << endl;
+    struct Node
+    {
+        Announcement message;
+        Node* next;
+    };
+    Node*front,*rear;
+
+
+    public:
+
+        Queue(){}
+
+        Queue()
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// argc is the number of command-line arguments, i.e. the size of argv
+//
+// argv is an array of strings, where each string is a command-line argument;
+//      argv[0] is the program name that is run, e.g. "./getline_demo"
+
+int main(int argc, char *argv[])
+{
+    // Check that the user provided a filename.
+    if (argc != 2)
+    {
+        cout << "Usage: " << argv[0] << " <filename>" << endl;
+        //
+        // Returning a non-zero value from main indicates the program ended
+        // abnormally. We don't care about main return values, but in some cases
+        // they are useful. If this program was used as part of a shell script,
+        // then the script might check this return value in an if-statement.
+        //
+        return 1; 
+    }
+
+    //
+    // Read the contents of the file named by argv[1], and print each line.
+    //
+    string filename = argv[1];
+
+    ifstream infile(filename);
+    string line;
+
+
+    
+
+
+
+
+
+    string command;
+    string name;
+    string title;
+    string message;
+
+
+    while (getline(infile, line))
+    {
+      size_t spacePos = line.find(' ');
+      command = line.substr(0, spacePos);
+      string params = line.substr(spacePos + 1);
+
+      if(command == "SEND"){
+        spacePos = params.find(' ');
+        name = params.substr(0,spacePos);
+        params = params.substr(spacePos +1);
+
+        spacePos = params.find(' ');
+        title = params.substr(0,spacePos);
+        params = params.substr(spacePos +1);
+
+        message = params;
+
+        Rank announcementRank;
+        if (title == "santa")
+            announcementRank = Rank::SANTA;
+        else if (title == "reindeer")
+            announcementRank = Rank::REINDEER;
+        else if (title == "elf2")
+            announcementRank = Rank::ELF2;
+        else if (title == "elf1")
+            announcementRank = Rank::ELF1;
+        else if (title == "snowman")
+            announcementRank = Rank::SNOWMAN;
+        else
+        {
+            cout << "Invalid rank: " << title << endl;
+            continue;
+        }
+
+        Announcement announce()
+
+      }
+      else if(command == "Remove_ALL"){
+
+      }
+      else if(command == "PROMOTE_ANNOUNCEMENTS"){
+
+      }
+      else if(command == "ANNOUNCE"){
+
+      }
+    }
+
+} // main
