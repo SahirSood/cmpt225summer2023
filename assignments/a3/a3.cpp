@@ -38,32 +38,184 @@
 using namespace std;
 
 
-
-
-
 class Queue : public Queue_base<Announcement>
 {
     struct Node
     {
-        Announcement message;
+        Announcement announcing;
         Node* next;
-    };
-    Node*front,*rear;
 
+        Node(const Announcement &a, Node *n) : announcing(a), next(n) {} 
+        
+    };
+    Node*begin,*rear;
+    int sz;
 
     public:
 
-        Queue(){}
+        Queue(){
+            sz = 0;
+        }
+        
+        ~Queue(){
+            if(begin == nullptr){
+                return;
+            }
+            Node* cur = begin;
+            Node*curnext = cur->next;
+            while(curnext!=nullptr){
+                delete cur;
+                cur = curnext;
+                curnext= cur->next;
+            }
+            delete cur;
+        }
 
-        Queue()
-
-}
-
-
+        int size()const{
+            return sz;
+        }
 
 
+        void enqueue(const Announcement &annouce){
+            Node* temp = new Node(annouce,nullptr);
+     
+     
+            if (size()==0){
+                begin = rear = temp;
+                sz++;   
+                return;
+            }
+            rear->next = temp;
+            rear = temp;
+            sz++;
+        }
+
+        const Announcement &front()const{
+            return rear->announcing;
+        }
+        void dequeue(){
+            if(size() ==0){
+                throw runtime_error("dequeue: queue is empty");
+            }
+            Node* temp = begin;
+            begin = begin->next;
+            
+            if(begin == nullptr){
+                rear = nullptr;
+            }
+            delete temp;
+        }
+};
 
 
+class Jinglenet
+{
+    private:
+        
+        Queue santa;
+        Queue reindeer;
+        Queue elf1;
+        Queue elf2;
+        Queue snowman;
+
+    void queueswitch(int i, Queue* qptr){
+        if(i==1){
+            *qptr = snowman;
+        }
+        if(i==2){
+            *qptr = elf2;
+        }
+        if(i==3){
+            *qptr = elf1;
+        }
+        if(i==4){
+            *qptr = reindeer;
+        }
+        if(i==5){
+            *qptr = santa;
+        }
+    }
+        
+    public:    
+
+        Jinglenet(){}
+
+        void send(string name, Announcement data){
+            if(name == "santa"){
+                santa.enqueue(data);
+            }
+            if(name == "reindeer"){
+                reindeer.enqueue(data);
+            }
+            if(name == "elf1"){
+                elf1.enqueue(data);
+            }
+            if(name == "elf2"){
+                elf2.enqueue(data);
+            }
+            if(name == "snowman"){
+                snowman.enqueue(data);
+            }
+        }
+        void clear(string name){
+            Queue* QueuePointer;
+            Queue temp;
+            for(int i =1;i<=5;i++){
+                queueswitch(i,QueuePointer);
+                while(QueuePointer->size()!=0){
+                    string peekName = QueuePointer->front().get_sender_name();
+                    Announcement peekAnnounce = QueuePointer->front();
+                    
+                    if(peekName == name){
+                        QueuePointer->dequeue();
+                    }
+                    else{
+                        temp.enqueue(peekAnnounce);
+                        QueuePointer->dequeue();
+                    }
+                }
+                while(temp.size()!=0){
+                    Announcement peekAnnounce = QueuePointer->front();
+                    QueuePointer->enqueue(peekAnnounce);
+                    temp.dequeue();
+                }
+            }
+            
+            
+             
+        }
+
+        void promote(string name){
+            Queue temp;
+            Queue* QueuePointer;
+            Queue* PromotionPointer;
+            for(int i=1;i<=4;i++){
+                queueswitch(i, QueuePointer);
+                queueswitch(i+1,PromotionPointer);
+                while(QueuePointer->size()!=0){
+                    string peekName = QueuePointer->front().get_sender_name();
+                    Announcement peekAnnounce = QueuePointer->front();
+                    if(peekName == name){
+                        PromotionPointer->enqueue(peekAnnounce);
+                        QueuePointer->dequeue();
+                    }
+                    else{
+                        temp.enqueue(peekAnnounce);
+                        QueuePointer->dequeue();
+                    }
+                }
+                while(temp.size()!=0){
+                    Announcement peekAnnounce = QueuePointer->front();
+                    QueuePointer->enqueue(peekAnnounce);
+                    temp.dequeue();
+                }
+            }
+        }
+        void announce(string number){
+            int n = stoi(number);
+            
+        }
+};
 
 
 
@@ -78,16 +230,16 @@ class Queue : public Queue_base<Announcement>
 
 int main(int argc, char *argv[])
 {
+
+    Jinglenet system;
+
+
+
     // Check that the user provided a filename.
     if (argc != 2)
     {
         cout << "Usage: " << argv[0] << " <filename>" << endl;
-        //
-        // Returning a non-zero value from main indicates the program ended
-        // abnormally. We don't care about main return values, but in some cases
-        // they are useful. If this program was used as part of a shell script,
-        // then the script might check this return value in an if-statement.
-        //
+
         return 1; 
     }
 
@@ -100,16 +252,10 @@ int main(int argc, char *argv[])
     string line;
 
 
-    
-
-
-
-
-
     string command;
-    string name;
-    string title;
-    string message;
+    string username;
+    string rank;
+
 
 
     while (getline(infile, line))
@@ -117,43 +263,25 @@ int main(int argc, char *argv[])
       size_t spacePos = line.find(' ');
       command = line.substr(0, spacePos);
       string params = line.substr(spacePos + 1);
+      
+      spacePos = params.find(' ');
+      username = params.substr(0,spacePos);
+      params = params.substr(spacePos+1);
+      spacePos = params.find(' ');
+      rank = params.substr(spacePos+1,spacePos);
+
+      Announcement announce(params);
 
       if(command == "SEND"){
-        spacePos = params.find(' ');
-        name = params.substr(0,spacePos);
-        params = params.substr(spacePos +1);
+        
 
-        spacePos = params.find(' ');
-        title = params.substr(0,spacePos);
-        params = params.substr(spacePos +1);
-
-        message = params;
-
-        Rank announcementRank;
-        if (title == "santa")
-            announcementRank = Rank::SANTA;
-        else if (title == "reindeer")
-            announcementRank = Rank::REINDEER;
-        else if (title == "elf2")
-            announcementRank = Rank::ELF2;
-        else if (title == "elf1")
-            announcementRank = Rank::ELF1;
-        else if (title == "snowman")
-            announcementRank = Rank::SNOWMAN;
-        else
-        {
-            cout << "Invalid rank: " << title << endl;
-            continue;
-        }
-
-        Announcement announce()
-
+        system.send(rank,announce);
       }
-      else if(command == "Remove_ALL"){
-
+      else if(command == "REMOVE_ALL"){
+        system.clear(username);
       }
       else if(command == "PROMOTE_ANNOUNCEMENTS"){
-
+        system.promote(username);
       }
       else if(command == "ANNOUNCE"){
 
