@@ -105,6 +105,7 @@ class Queue : public Queue_base<Announcement>
             }
             delete temp;
         }
+        
 };
 
 
@@ -135,7 +136,31 @@ class Jinglenet
             *qptr = santa;
         }
     }
-        
+    void announce(){
+        if(santa.size()!=0){
+            jnet.announce(santa.front());
+            santa.dequeue();
+        }
+        else if(reindeer.size()!=0){
+            jnet.announce(reindeer.front());
+            reindeer.dequeue();
+        }
+        else if(elf1.size()!=0){
+            jnet.announce(elf1.front());
+            elf1.dequeue();
+        }
+        else if(elf2.size()!=0){
+            jnet.announce(elf2.front());
+            elf2.dequeue();
+        }
+        else if(snowman.size()!=0){
+            jnet.announce(snowman.front());
+            snowman.dequeue();
+        }
+        else{
+            return;
+        }
+    }   
     public:    
 
         Jinglenet(){}
@@ -213,7 +238,12 @@ class Jinglenet
         }
         void announce(string number){
             int n = stoi(number);
-            
+            int i=0;
+            while(i<n){
+                announce();
+                i++;
+            }
+
         }
 };
 
@@ -232,9 +262,6 @@ int main(int argc, char *argv[])
 {
 
     Jinglenet system;
-
-
-
     // Check that the user provided a filename.
     if (argc != 2)
     {
@@ -284,7 +311,7 @@ int main(int argc, char *argv[])
         system.promote(username);
       }
       else if(command == "ANNOUNCE"){
-
+        system.announce(username);
       }
     }
 
