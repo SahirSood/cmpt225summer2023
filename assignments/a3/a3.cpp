@@ -72,8 +72,8 @@ class Queue : public Queue_base<Announcement>
 
         void enqueue(const Announcement &annouce){
             Node* temp = new Node(annouce,nullptr);
-
-            if (size()==0){
+            cout<<temp->announcing.to_string()<<endl;
+            if (rear==NULL){
                 begin = rear = temp;
                 sz++;   
                 return;
@@ -85,10 +85,10 @@ class Queue : public Queue_base<Announcement>
         }
 
         const Announcement &front()const{
-            return rear->announcing;
+            return begin->announcing;
         }
         void dequeue(){
-            if(size() ==0){
+            if(sz == 0){
                 throw runtime_error("dequeue: queue is empty");
             }
             Node* temp = begin;
@@ -132,26 +132,31 @@ class Jinglenet
         }
         return nullptr;
     }
-    void announce(){
+    void announcing(){
         if(santa.size()!=0){
             jnet.announce(santa.front());
             santa.dequeue();
+            return;
         }
         else if(reindeer.size()!=0){
             jnet.announce(reindeer.front());
             reindeer.dequeue();
-        }
-        else if(elf1.size()!=0){
-            jnet.announce(elf1.front());
-            elf1.dequeue();
+            return;
         }
         else if(elf2.size()!=0){
             jnet.announce(elf2.front());
             elf2.dequeue();
+            return;
+        }
+        else if(elf1.size()!=0){
+            jnet.announce(elf1.front());
+            elf1.dequeue();
+            return;
         }
         else if(snowman.size()!=0){
             jnet.announce(snowman.front());
             snowman.dequeue();
+            return;
         }
         else{
             return;
@@ -173,10 +178,7 @@ class Jinglenet
                 elf1.enqueue(data);
             }
             if(name == "elf2"){
-                cout<<"elf2 enqueue entered"<<endl;
                 elf2.enqueue(data);
-                cout<<"elf2 enqueue exited"<<endl;
-
             }
             if(name == "snowman"){
                 snowman.enqueue(data);
@@ -206,9 +208,6 @@ class Jinglenet
                     temp.dequeue();
                 }
             }
-            
-            
-             
         }
 
         void promote(string name){
@@ -240,11 +239,10 @@ class Jinglenet
         void announce(string number){
             int n = stoi(number);
             int i=0;
-            while(i<n){
-                announce();
+            while(i<=n){
+                announcing();
                 i++;
             }
-
         }
 
 };
@@ -297,28 +295,17 @@ int main(int argc, char *argv[])
       size_t spacePos = line.find(' ');
       command = line.substr(0, spacePos);
       string params = line.substr(spacePos + 1);
-      cout<<"True Params:"<<params<<endl;   
 
       spacePos = params.find(' ');
       username = params.substr(0,spacePos);
       string newsub = params.substr(spacePos+1);
       spacePos = newsub.find(' ');
       rank = newsub.substr(0,spacePos);
-    
-
-      cout<<"Params:"<<params<<endl; 
-      cout<<"Command:"<<command<<endl;
-      cout<<"Username:"<<username<<endl; 
-      cout<<"rank:"<<rank<<endl;
-      cout<<"--------------"<<endl;
-      
+     
 
       if(command == "SEND"){
-        
-        cout<<"Enters send"<<endl;
         Announcement announce(params);
         system.send(rank,announce);
-
       }
       else if(command == "REMOVE_ALL"){
         system.clear(username);
@@ -328,6 +315,7 @@ int main(int argc, char *argv[])
       }
       else if(command == "ANNOUNCE"){
         system.announce(username);
+        cout<<"announce"<<endl;
       }
     }
 

@@ -56,6 +56,7 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "files.associations": {
     "type_traits": "cpp",
-    "system_error": "cpp"
+    "system_error": "cpp",
+    "iostream": "cpp"
   }
 }

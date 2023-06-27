@@ -43,6 +43,7 @@ string to_string(Rank r)
     default:
         assert(false);
     }
+    return " ";
 }
 
 //
@@ -61,6 +62,7 @@ Rank to_rank(const string &s)
     if (s == "santa")
         return Rank::SANTA;
     assert(false);
+    return Rank::ELF1;
 }
 
 //
