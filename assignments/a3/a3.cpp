@@ -53,23 +53,17 @@ class Queue : public Queue_base<Announcement>
 
     public:
 
-        Queue(){
-            sz = 0;
-        }
+        Queue() : begin(nullptr), rear(nullptr), sz(0) {}
+
         
         ~Queue(){
-            if(begin == nullptr){
-                return;
-            }
             Node* cur = begin;
-            Node*curnext = cur->next;
-            while(curnext!=nullptr){
-                delete cur;
-                cur = curnext;
-                curnext= cur->next;
+            while (cur != nullptr) {
+                Node* temp = cur;
+                cur = cur->next;
+                delete temp;
             }
-            delete cur;
-        }
+}
 
         int size()const{
             return sz;
@@ -78,12 +72,12 @@ class Queue : public Queue_base<Announcement>
 
         void enqueue(const Announcement &annouce){
             Node* temp = new Node(annouce,nullptr);
-     
-     
+
             if (size()==0){
                 begin = rear = temp;
                 sz++;   
                 return;
+
             }
             rear->next = temp;
             rear = temp;
@@ -103,6 +97,7 @@ class Queue : public Queue_base<Announcement>
             if(begin == nullptr){
                 rear = nullptr;
             }
+            sz--;
             delete temp;
         }
         
@@ -119,22 +114,23 @@ class Jinglenet
         Queue elf2;
         Queue snowman;
 
-    void queueswitch(int i, Queue* qptr){
+    Queue* queueswitch(int i){
         if(i==1){
-            *qptr = snowman;
+            return &snowman;
         }
         if(i==2){
-            *qptr = elf2;
+            return &elf2;
         }
         if(i==3){
-            *qptr = elf1;
+            return &elf1;
         }
         if(i==4){
-            *qptr = reindeer;
+            return &reindeer;
         }
         if(i==5){
-            *qptr = santa;
+            return &santa;
         }
+        return nullptr;
     }
     void announce(){
         if(santa.size()!=0){
@@ -164,6 +160,7 @@ class Jinglenet
     public:    
 
         Jinglenet(){}
+        ~Jinglenet(){}
 
         void send(string name, Announcement data){
             if(name == "santa"){
@@ -176,21 +173,24 @@ class Jinglenet
                 elf1.enqueue(data);
             }
             if(name == "elf2"){
+                cout<<"elf2 enqueue entered"<<endl;
                 elf2.enqueue(data);
+                cout<<"elf2 enqueue exited"<<endl;
+
             }
             if(name == "snowman"){
                 snowman.enqueue(data);
             }
         }
         void clear(string name){
-            Queue* QueuePointer;
+            Queue* QueuePointer = nullptr;
             Queue temp;
             for(int i =1;i<=5;i++){
-                queueswitch(i,QueuePointer);
+                QueuePointer = queueswitch(i);
                 while(QueuePointer->size()!=0){
+                    cout<<QueuePointer->size()<<endl;
                     string peekName = QueuePointer->front().get_sender_name();
                     Announcement peekAnnounce = QueuePointer->front();
-                    
                     if(peekName == name){
                         QueuePointer->dequeue();
                     }
@@ -198,9 +198,10 @@ class Jinglenet
                         temp.enqueue(peekAnnounce);
                         QueuePointer->dequeue();
                     }
+                    cout<<QueuePointer->size()<<endl;
                 }
                 while(temp.size()!=0){
-                    Announcement peekAnnounce = QueuePointer->front();
+                    Announcement peekAnnounce = temp.front();
                     QueuePointer->enqueue(peekAnnounce);
                     temp.dequeue();
                 }
@@ -212,11 +213,11 @@ class Jinglenet
 
         void promote(string name){
             Queue temp;
-            Queue* QueuePointer;
-            Queue* PromotionPointer;
+            Queue* QueuePointer =nullptr;
+            Queue* PromotionPointer =nullptr;
             for(int i=1;i<=4;i++){
-                queueswitch(i, QueuePointer);
-                queueswitch(i+1,PromotionPointer);
+                QueuePointer = queueswitch(i);
+                PromotionPointer = queueswitch(i+1);
                 while(QueuePointer->size()!=0){
                     string peekName = QueuePointer->front().get_sender_name();
                     Announcement peekAnnounce = QueuePointer->front();
@@ -230,7 +231,7 @@ class Jinglenet
                     }
                 }
                 while(temp.size()!=0){
-                    Announcement peekAnnounce = QueuePointer->front();
+                    Announcement peekAnnounce = temp.front();
                     QueuePointer->enqueue(peekAnnounce);
                     temp.dequeue();
                 }
@@ -245,6 +246,7 @@ class Jinglenet
             }
 
         }
+
 };
 
 
@@ -260,9 +262,10 @@ class Jinglenet
 
 int main(int argc, char *argv[])
 {
-
     Jinglenet system;
+
     // Check that the user provided a filename.
+   
     if (argc != 2)
     {
         cout << "Usage: " << argv[0] << " <filename>" << endl;
@@ -273,7 +276,10 @@ int main(int argc, char *argv[])
     //
     // Read the contents of the file named by argv[1], and print each line.
     //
+    
+
     string filename = argv[1];
+
 
     ifstream infile(filename);
     string line;
@@ -287,22 +293,32 @@ int main(int argc, char *argv[])
 
     while (getline(infile, line))
     {
+
       size_t spacePos = line.find(' ');
       command = line.substr(0, spacePos);
       string params = line.substr(spacePos + 1);
-      
+      cout<<"True Params:"<<params<<endl;   
+
       spacePos = params.find(' ');
       username = params.substr(0,spacePos);
-      params = params.substr(spacePos+1);
-      spacePos = params.find(' ');
-      rank = params.substr(spacePos+1,spacePos);
+      string newsub = params.substr(spacePos+1);
+      spacePos = newsub.find(' ');
+      rank = newsub.substr(0,spacePos);
+    
 
-      Announcement announce(params);
+      cout<<"Params:"<<params<<endl; 
+      cout<<"Command:"<<command<<endl;
+      cout<<"Username:"<<username<<endl; 
+      cout<<"rank:"<<rank<<endl;
+      cout<<"--------------"<<endl;
+      
 
       if(command == "SEND"){
         
-
+        cout<<"Enters send"<<endl;
+        Announcement announce(params);
         system.send(rank,announce);
+
       }
       else if(command == "REMOVE_ALL"){
         system.clear(username);
