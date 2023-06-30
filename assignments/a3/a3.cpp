@@ -290,7 +290,7 @@ class Jinglenet
         void announce(string number){
             //turns passed string into an int
             int n = stoi(number);
-            int i=0;
+            int i=1;
             while(i<=n){
                 announcing();
                 i++;
