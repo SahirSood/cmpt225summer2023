@@ -223,6 +223,38 @@ SortStats quick_sort(vector<T> &v){
                     elapsed_cpu_time_sec}
 }
 
+// template <typename T>
+// SortStats quick_sort(vector<T> &v){
+//     clock_t start = clock();
+//     ulong num_comps = 0;
+    
+//     vector<T> L,E,G;
+
+//     if(v.size()<1){
+//         return;
+//     }
+
+//     T p = v.back();
+//     while (!v.empty())
+//     {
+//         num_comps++;
+//         if(v.back()<p){
+//             L.push_back(v.pop_back());
+//         }
+//         else if(v.back() = p){
+//             E.push_back(v.pop_back);
+//         }
+//         else{
+//             G.push_back(v.pop_back());
+//         }
+//     }
+//     quick_sort(L);
+//     quick_sort(G);
+
+//     while (!L.empty())
+//     {
+//         v.push_back(L.front)
+//     }
 
 
 
@@ -260,4 +292,9 @@ SortStats iquick_sort(vector<T> &v);
 //
 // Returns a vector of n randomly chosen ints, each <= max and >= min.
 //
-vector<int> rand_vec(int n, int min, int max);
+vector<int> rand_vec(int n, int min, int max){
+    vector<int> v;
+    for(int i=0; i<n;i++){
+        v.push_back(rand()%(max-min)+min);
+    }
+}
