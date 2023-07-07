@@ -5,9 +5,9 @@
 // Student Info
 // ------------
 //
-// Name : <put your full name here!>
-// St.# : <put your full SFU student number here>
-// Email: <put your SFU email address here>
+// Name : <Sahir Sood>
+// St.# : <301462135>
+// Email: <ssa434@sfu.ca>
 //
 //
 // Statement of Originality
@@ -73,6 +73,7 @@ SortStats insertion_sort(vector<T> &v)
     {
         j=i;
         tmp = v[i];
+        num_comps++;
         while (j>0 && tmp<v[j-1])
         {
             num_comps++;
@@ -102,6 +103,7 @@ SortStats selection_sort(vector<T> &v){
         int vectMin = i;
         for (int j = i + 1; j < v.size(); j++)
         {
+            num_comps++;
             if(v[j] < v[vectMin])
             {
                 vectMin = j;
@@ -118,4 +120,144 @@ SortStats selection_sort(vector<T> &v){
                     num_comps,
                     elapsed_cpu_time_sec}
 }
+//Helper for mergeSort
+int mergeSorting(vector<int>&left, vector<int>& right, vector<int>& vs)
+{
+    int nL = left.size();
+    int nR = right.size();
+    int i = 0, j = 0, k = 0;
+
+    int n =0;
+
+    while (j < nL && k < nR) 
+    {
+        n++;
+        if (left[j] < right[k]) {
+            vs[i] = left[j];
+            j++;
+        }
+        else {
+            vs[i] = right[k];
+            k++;
+        }
+        i++;
+    }
+    while (j < nL) {
+        vs[i] = left[j];
+        j++; i++;
+    }
+    while (k < nR) {
+        vs[i] = right[k];
+        k++; i++;
+    }
+}
+
+template <typename T>
+SortStats merge_sort(vector<T> &v){
+    ulong num_comps = 0;
+    clock_t start= clock();
+    
+    if (v.size() <= 1) {
+        return;}
+
+    int mid = v.size() / 2;
+    vector<int> left;
+    vector<int> right;
+
+    for (size_t j = 0; j < mid;j++)
+        left.push_back(v[j]);
+    for (size_t j = 0; j < (v.size()) - mid; j++)
+        right.push_back(v[mid + j]);
+
+    sort(left);
+    sort(right);
+    num_comps = (left, right, v);
+    
+    clock_t end= clock();
+    double elapsed_cpu_time_sec = double(end - start) / CLOCKS_PER_SEC;
+    return SortStats{"Merge Sort",
+                    v.size(),
+                    num_comps,
+                    elapsed_cpu_time_sec}
+}
+
+
+
+//Helper Fuction for quicksort
+int Partition(vector<int> &v, int start, int end, int* comps){
+	
+	int pivot = end;
+	int j = start;
+	for(int i=start;i<end;++i){
+        *comps++;
+        if(v[i]<v[pivot]){
+			swap(v[i],v[j]);
+			++j;
+		}
+	}
+	swap(v[j],v[pivot]);
+	return j;
+}
+
+//second helper for Quick sort
+template <typename T>
+void quick_sort_main(vector<T> &v, int start, int end, int* comps){
+    if(start<end){
+        int p = Partition(v,start,end);
+        quick_sort_main(v,start,p-1, comps);
+        quick_sort_main(v,p+1,end,comps);
+    }
+}
+
+template <typename T>
+SortStats quick_sort(vector<T> &v){
+    clock_t start = clock();
+    ulong num_comps = 0;
+    quick_sort_main(v,0,v.size()-1,&num_comps);
+    clock_t end = clock();
+    double elapsed_cpu_time_sec = double(end - start) / CLOCKS_PER_SEC;
+
+    return SortStats{"Quick Sort",
+                    v.size(),
+                    num_comps,
+                    elapsed_cpu_time_sec}
+}
+
+
+
+
+template <typename T>
+SortStats shell_sort(vector<T> &v){
+    clock_t start = clock();
+    ulong num_comps = 0;
+    int n = v.size();
+
+    for(int gap = n/2; gap>0;gap/=2){
+        for(int i = gap;i<n;i++){
+            int temp = v[i];
+
+            for(int j=i;j>=gap && v[j-gap]>temp; j-=gap){
+                v[j]=v[j-gap];
+                num_comps++;
+            }
+            v[j] = temp;
+        }
+    }
+    clock_t end = clock();
+    double elapsed_cpu_time_sec = double(end - start) / CLOCKS_PER_SEC;
+
+    return SortStats{"Shell Sort",
+                    v.size(),
+                    num_comps,
+                    elapsed_cpu_time_sec}
+}
+
+
+template <typename T>
+SortStats iquick_sort(vector<T> &v);
+// See description in assignment.
+
 //
+// Returns a vector of n randomly chosen ints, each <= max and >= min.
+//
+vector<int> rand_vec(int n, int min, int max);
