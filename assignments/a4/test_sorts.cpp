@@ -11,6 +11,7 @@
 #include "test.h"
 #include <cassert>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -331,48 +332,119 @@ void test_shell_sort_string()
     assert(is_sorted(v));
 }
 
-// void test_iquick_sort_int()
-// {
-//     Test("test_iquick_sort_int");
-//     vector<int> v;
-//     assert(v.size() == 0);
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {2};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {2, 1};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {2, 1, 0};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-// }
+void test_iquick_sort_int()
+{
+    Test("test_iquick_sort_int");
+    vector<int> v;
+    assert(v.size() == 0);
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {2};
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {2, 1};
+    iquick_sort(v);
+    assert(is_sorted(v));
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {2, 1, 0};
+    iquick_sort(v);
+    assert(is_sorted(v));
+}
 
-// void test_iquick_sort_string()
-// {
-//     Test("test_iquick_sort_string");
-//     vector<string> v;
-//     assert(v.size() == 0);
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {"b"};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {"b", "a"};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {"b", "a", "c"};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-//     v = {"a", "b", "c"};
-//     iquick_sort(v);
-//     assert(is_sorted(v));
-// }
+void test_iquick_sort_string()
+{
+    Test("test_iquick_sort_string");
+    vector<string> v;
+    assert(v.size() == 0);
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {"b"};
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {"b", "a"};
+    iquick_sort(v);
+    assert(is_sorted(v));
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {"b", "a", "c"};
+    iquick_sort(v);
+    assert(is_sorted(v));
+    v = {"a", "b", "c"};
+    iquick_sort(v);
+    assert(is_sorted(v));
+}
+void bubble_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = bubble_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
+void insertion_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = insertion_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
+void selection_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = selection_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
+void quick_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = quick_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
+void merge_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = merge_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
+
+void i_quick_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = iquick_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
+void shell_sort_test(ofstream &out)
+    {
+        for (int i = 2000; i <= 50000; i += 2000)
+        {
+            vector<int> random_vector = rand_vec(i, 1, i);
+            SortStats stats = shell_sort(random_vector);
+            cout << stats.to_csv() << endl;
+            out<<stats.to_csv()<<endl;
+        }
+    };
 
 int main()
 {
@@ -397,8 +469,22 @@ int main()
     test_shell_sort_int();
     test_shell_sort_string();
 
-    // test_iquick_sort_int();
-    // test_iquick_sort_string();
+    test_iquick_sort_int();
+    test_iquick_sort_string();
 
     cout << "\nall sorting tests passed!" << endl;
+
+    ofstream outFile("TestFile.csv");
+
+
+    // bubble_sort_test(outFile);
+    // insertion_sort_test(outFile);
+    // selection_sort_test(outFile);
+    merge_sort_test(outFile);
+    quick_sort_test(outFile);
+    shell_sort_test(outFile);
+    i_quick_sort_test(outFile);
+
 } // main
+
+

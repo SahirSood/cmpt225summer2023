@@ -142,7 +142,6 @@ SortStats selection_sort(vector<T> &v){
 template <typename T>
 int mergeSorting(vector<T>&left, vector<T>& right, vector<T>& vs)
 {
-
     int ret = 0;
     int nL = left.size();
     int nR = right.size();
@@ -177,7 +176,6 @@ int mergeSorting(vector<T>&left, vector<T>& right, vector<T>& vs)
 template <typename T>
 int sort(vector<T> &v){
     int ret = 0;
-    
     if (v.size() <= 1) {
         return 0;
         }
@@ -193,8 +191,8 @@ int sort(vector<T> &v){
         right.push_back(v[mid + j]);
     }
         
-    sort(left);
-    sort(right);
+    ret+=sort(left);
+    ret+=sort(right);
     ret+=mergeSorting(left,right,v);
     return ret;
 }
@@ -287,17 +285,57 @@ SortStats shell_sort(vector<T> &v){
 }
 
 
-template <typename T>
-SortStats iquick_sort(vector<T> &v);
-// See description in assignment.
 
+template <typename T>
+void i_quick_sort_main(vector<T> &v, int start, int end, ulong* comps){
+    if(start<end){
+        if(end - start < 25){
+            int i,j;
+            T tmp;
+            for(i=start;i<=end;i++)
+            {
+                j=i;
+                tmp = v[i];
+                (*comps)++;
+                while (j>0 && tmp<v[j-1])
+                {
+                    (*comps)++;
+                    v[j]=v[j-1];
+                    j--;
+                }
+                v[j] = tmp;
+                
+            }
+            return;
+        }
+        int p = Partition(v,start,end, comps);
+        i_quick_sort_main(v,start,p-1, comps);
+        i_quick_sort_main(v,p+1,end,comps);
+    }
+}
+
+template <typename T>
+SortStats iquick_sort(vector<T> &v){
+    clock_t start = clock();
+    ulong num_comps = 0;
+
+    i_quick_sort_main(v,0,v.size()-1,&num_comps);
+    
+    clock_t end = clock();
+    double elapsed_cpu_time_sec = double(end - start) / CLOCKS_PER_SEC;
+
+    return SortStats{"IQuick Sort",
+                    v.size(),
+                    num_comps,
+                    elapsed_cpu_time_sec};
+}
 //
 // Returns a vector of n randomly chosen ints, each <= max and >= min.
 //
 vector<int> rand_vec(int n, int min, int max){
     vector<int> v;
     for(int i=0; i<n;i++){
-        v.push_back(rand()%(max-min)+min);
+        v.push_back(rand()%(max-min+1)+min);
     }
     return v;
 }
