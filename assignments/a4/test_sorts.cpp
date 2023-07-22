@@ -477,9 +477,9 @@ int main()
     ofstream outFile("TestFile.csv");
 
 
-    // bubble_sort_test(outFile);
-    // insertion_sort_test(outFile);
-    // selection_sort_test(outFile);
+    bubble_sort_test(outFile);
+    insertion_sort_test(outFile);
+    selection_sort_test(outFile);
     merge_sort_test(outFile);
     quick_sort_test(outFile);
     shell_sort_test(outFile);
