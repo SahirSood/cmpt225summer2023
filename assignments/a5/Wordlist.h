@@ -92,6 +92,7 @@ class Wordlist : public Wordlist_base
     // of a node becomes taller than its left subtree. 
     Node* rrrotation(Node* &t)
     {
+        cout<<"Enters rrr:"<<endl;
         // Store the left child of the original node t in a variable u
         Node* u = t->left;
         
@@ -137,6 +138,7 @@ class Wordlist : public Wordlist_base
     // its left subtree. 
     Node* lrlrotation(Node* &t)
     {
+        cout<<"Enters lrl:"<<endl;
         // Perform a Right-Right rotation on the right subtree of the original node t
         t->right = rrrotation(t->right);
 
@@ -150,6 +152,7 @@ class Wordlist : public Wordlist_base
     // its right subtree. 
     Node* rlrrotation(Node* &t)
     {
+        cout<<"Enters rlr:"<<endl;
         // Perform a Left-Left rotation on the left subtree of the original node t
         t->left = llrotation(t->left);
 
@@ -330,8 +333,6 @@ class Wordlist : public Wordlist_base
             return true;
         }
         return false;
-        
-
     }
 
     public: 
@@ -343,6 +344,7 @@ class Wordlist : public Wordlist_base
             ifstream file_(file_name); //opens the file given in .cpp file  or terminal
             if(file_.is_open()){
                 while(file_ >> word_){ // loops thorugh each word in file and saves to local variable
+                    // cout<<word_<<endl;
                     add_word(word_);   // calls function that adds word to LL
                  }
                 file_.close();

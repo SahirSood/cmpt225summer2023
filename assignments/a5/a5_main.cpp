@@ -18,14 +18,16 @@
 //
 void test_read()
 {
-    Wordlist lst;
+    Wordlist lst("small.txt");
     string w;
+    cout<<"list created"<<endl;
     
-    while (cin >> w)
-    {
-        lst.add_word(w);
-    }
-    cout<<"----------------------------------------------"<<endl;
+    // while (cin >> w)
+    // {
+    //     lst.add_word(w);
+    // }
+    // cout<<"----------------------------------------------"<<endl;
+    lst.print_stats();
 }
 void test_wordlist()
 {
