@@ -18,7 +18,7 @@
 //
 void test_read()
 {
-    Wordlist lst("tiny_shakespeare.txt");
+    Wordlist lst("small.txt");
     // string w;
     
     // while (cin >> w)
