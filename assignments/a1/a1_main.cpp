@@ -56,5 +56,4 @@ int main()
     test_read();
     test_wordlist();
     cout << "Welcome to assignment 1!\n";
-
 }

@@ -64,27 +64,9 @@ class Wordlist : public Wordlist_base
     Node *root = nullptr;
 
     //Helper Function that returns the height of a given node
-    int calheight(Node* p){
-        
-        //When both left and right subtrees exist we return the maximum height between the two and add 1
-        if(p->left && p->right){
-            if(p->left->height<p->right->height){
-                return p->right->height + 1;
-            }
-            else{
-                return p->left->height +1;
-            }
-        }
-        //When the left subtree exists but not the right, we return height of left subtree +1
-        else if(p->left && p->right == nullptr){
-            return p->left->height +1;
-        }
-        //When the right subtree exists but not the left, we return height of right subtree +1
-        else if(p->right && p->left == nullptr){
-           return p->right->height+1;
-        }
-        //if there is no left or right subtree then the height is 0
-        return 0;
+    int height(Node* t)
+    {
+        return (t == NULL ? -1 : t->height);
     }
     
     //Balancing Functions
@@ -104,135 +86,204 @@ class Wordlist : public Wordlist_base
         }
         return 0;
     }
-    
-    Node* llrotation(Node* n){
-        cout << "Performing LL rotation on: " << (n ? n->word : "nullptr") << endl;
 
-        Node* p = n;
-        Node* tp = p->left;
-
-        p->left=tp->right;
-        tp->right = p;
-        return tp;
-    }
-    
-    Node* rrrotation(Node*n){
-        cout << "Performing LL rotation on: " << (n ? n->word : "nullptr") << endl;
-
-        Node* p = n;
-        Node* tp = p->right;
-
-        p->right = tp->left;
-        tp->left = p;
-        return tp;              
-    }
-
-    Node* rlrotation(Node*n){
-        cout << "Performing RL rotation on: " << (n ? n->word : "nullptr") << endl;
-
-        Node* p = n;
-        Node* tp = p->right;
-        Node* tp2 = p->right->left;
-
-        p -> right = tp2->left;
-        tp ->left = tp2->right;
-        tp2 ->left = p;
-        tp2->right = tp; 
-        return tp2;
-    }
-
-    Node* lrrotation(Node*n){
-        cout << "Performing LR rotation on: " << (n ? n->word : "nullptr") << endl;
-
-        Node* p = n;
-        Node* tp = p->left;
-        Node* tp2 = p->left->right;
-
-        p -> left = tp2->right;
-        tp ->right = tp2->left;
-        tp2 ->right = p;
-        tp2->left = tp; 
-        return tp2;
-    }
-
-    Node* insert(Node*& cur, const string &w){
-        if (cur == nullptr)
-            {
-                cur = new Node;
-                cur->left = cur->right = nullptr;
-                cur ->word = w;
-                cur->height = cur->count = 0;
-                return cur;
-            }
+    // Right-Right Rotation
+    // This function performs a rotation to balance the tree when the right subtree
+    // of a node becomes taller than its left subtree. 
+    Node* rrrotation(Node* &t)
+    {
+        // Store the left child of the original node t in a variable u
+        Node* u = t->left;
         
-        if(w < cur->word){
-            cout << "Inserting: " << w << ", Current Node: " << (cur ? cur->word : "nullptr") << endl;
+        // Move the right child of u to be the left child of t
+        t->left = u->right;
 
-            cur->left = insert(cur->left,w);
+        // Perform the rotation by making u the new root of the subtree
+        u->right = t;
+
+        // Update the heights of t and u
+        t->height = max(height(t->left), height(t->right)) + 1;
+        u->height = max(height(u->left), t->height) + 1;
+        
+        // Return the new root of the subtree u
+        return u;
+    }
+
+    // Left-Left Rotation
+    // This function performs a rotation to balance the tree when the left subtree
+    // of a node becomes taller than its right subtree. 
+    Node* llrotation(Node* &t)
+    {
+        // Store the right child of the original node t in a variable u
+        Node* u = t->right;
+
+        // Move the left child of u to be the right child of t
+        t->right = u->left;
+
+        // Perform the rotation by making u the new root of the subtree
+        u->left = t;
+
+        // Update the heights of t and u
+        t->height = max(height(t->left), height(t->right)) + 1;
+        u->height = max(height(t->right), t->height) + 1;
+        
+        // Return the new root of the subtree u
+        return u;
+    }
+
+    // Left-Right-Left Rotation
+    // This function performs two rotations to balance the tree when a node's left subtree
+    // is taller than its right subtree, and the left child's right subtree is taller than
+    // its left subtree. 
+    Node* lrlrotation(Node* &t)
+    {
+        // Perform a Right-Right rotation on the right subtree of the original node t
+        t->right = rrrotation(t->right);
+
+        // Perform a Left-Left rotation on the original node t
+        return llrotation(t);
+    }
+
+    // Right-Left-Right Rotation
+    // This function performs two rotations to balance the tree when a node's right subtree
+    // is taller than its left subtree, and the right child's left subtree is taller than
+    // its right subtree. 
+    Node* rlrrotation(Node* &t)
+    {
+        // Perform a Left-Left rotation on the left subtree of the original node t
+        t->left = llrotation(t->left);
+
+        // Perform a Right-Right rotation on the original node t
+        return rrrotation(t);
+    }
+
+
+        // Inserts a given string into the AVL tree
+    // The function first adds the word to the binary search tree (BST) normally, following
+    // the properties of a BST. Then it balances the tree to ensure it maintains the AVL
+    Node* insert(Node* t, string x)
+    {
+        // Base Case
+        // If we reach a node (null), we create a new node with the value x and update
+        // its height to 0 (since it will be a leaf node). 'count' is also set to 1 since
+        // it is a unique value in the tree.
+        if (t == NULL)
+        {
+            t = new Node;
+            t->word = x;
+            t->height = 0;
+            t->left = t->right = NULL;
+            t->count = 1;
         }
 
-        else if(w>cur->word){
-            cout << "Inserting: " << w << ", Current Node: " << (cur ? cur->word : "nullptr") << endl;
+        // If the node is not null, we look for the appropriate place to insert the new node.
+        // Based on the properties of a BST:
+        else if (x < t->word)
+        {
+            t->left = insert(t->left, x);
+            
+            // After inserting the new node, we check if a rotation needs to be done to balance the tree.
+            // The 'bf' function (which calculates the balance factor) is used to check if the AVL property is violated
+            //height differences must be less than 2
 
-            cur->right = insert(cur->right,w);
+            if (bf(t) == 2)
+            {
+                // If the newly inserted value is in the left subtree of the current node, we perform a
+                // Right-Right rotation (rrrotation) on the current node.
+                if (x < t->left->word)
+                    t = rrrotation(t);
+                // Otherwise, we perform a Right-Left-Right rotation (rlrrotation) on the current node.
+                else
+                    t = rlrrotation(t);
+            }
         }
-        else{
-            cur->count++;
+        else if (x > t->word)
+        {
+            t->right = insert(t->right, x);
+
+            // After inserting the new node, we check if a rotation needs to be done to balance the tree.
+            // The 'bf' function is used to check if the AVL property is violated at this node (bf(t) == 2
+            // indicates the right subtree is taller by more than 1).
+            if (bf(t) == 2)
+            {
+                // If the newly inserted value is in the right subtree of the current node, we perform a
+                // Left-Left rotation (llrotation) on the current node.
+                if (x > t->right->word)
+                    t = llrotation(t);
+                // Otherwise, we perform a Left-Right-Left rotation (lrlrotation) on the current node.
+                else
+                    t = lrlrotation(t);
+            }
         }
-    
-        cout << "Height before updating: " << cur->height << endl;
-        cur->height = calheight(cur);
-        cout << "Height after updating: " << cur->height << endl;
-
-
-        // if(bf(cur)==2 && bf(cur->left)==1){
-        //     cur = llrotation(cur);
-        // }
-        // else if(bf(cur)==-2 && bf(cur->right)==-1){
-        //     cur = rrrotation(cur);
-        // }
-        // else if(bf(cur)==-2 && bf(cur->right)==1){
-        //     cur = rlrotation(cur);
-        // }
-        // else if(bf(cur)==2 && bf(cur->left)==-1){
-        //     cur = lrrotation(cur);
-        // }        
-        return cur;
-
+        else
+        {
+            // If the value already exists in the tree we increment count variable.
+            t->count++;
         }
 
+        // Update the height of the current node based on the heights of its left and right subtrees.
+        // Then, return the updated node.
+        t->height = max(height(t->left), height(t->right)) + 1;
+        return t;
+    }
+
+    //Returns total number of nodes in a BST or AVL tree
     int totalNodes(Node* n)const{
+        //null reached meaning no node, return 0
         if(n == nullptr){
             return 0;
         }
+        //non null node, we add 1 and call left and right subtrees.
         return 1 + totalNodes(n->left) + totalNodes(n->right);
     }
+    //Returnns total words in a BST or AVL tree
+    //A node in a tree may contain multiple words
+    //ie Node has word hello, but count 3 times.
+    //So hello 3 times
     int totalWords(Node* n)const{
         if(n == nullptr){
             return 0;
         }
-        return n->count + totalNodes(n->left) + totalNodes(n->right);
+        //if node is non null we add the count of the node and call left and right subtrees.
+        return n->count + totalWords(n->left) + totalWords(n->right);
     }
+
+    //Function that deletes every node in a tree
     void deallocate(Node* cur){
+        //Base case
         if(cur == nullptr){
             return;
         }
-
+        //Call left and right subtrees
         deallocate(cur->left);
         deallocate(cur->right);
+        //when all nodes are called we delete the nodes
         delete cur;
     }
-    bool is_sort_helper(Node* n)const{
-        if(n == nullptr){
+
+    //Helper function to see if a tree is sorted
+
+    bool is_sort_helper(Node* n) const {
+        // Base case, if we reach the end of a tree (nullptr), return true
+        if (n == nullptr) {
             return true;
         }
-        if(n->left->word > n->word || n->right->word < n->word){
+
+        // Check if the left child exists and its word is greater than the current node's word
+        if (n->left != nullptr && n->left->word > n->word) {
             return false;
         }
 
-        return is_sort_helper(n->left) && is_sort_helper(n->right);    
+        // Check if the right child exists and its word is less than the current node's word
+        if (n->right != nullptr && n->right->word < n->word) {
+            return false;
+        }
+
+        // Recursively check the left and right subtrees
+        return is_sort_helper(n->left) && is_sort_helper(n->right);
     }
 
+    
     void most_frequent_helper(string* word, int* max, Node* n)const{
         if(n == nullptr){
             return;
@@ -267,6 +318,22 @@ class Wordlist : public Wordlist_base
         in_order_print(n->right);
     }
 
+    bool lst_contains(Node*n, string x)const{
+        if(n==nullptr){
+            return false;
+        }
+        if(n->word == x){
+            return true;
+        }
+        if (n->left || n->right)
+        {
+            return true;
+        }
+        return false;
+        
+
+    }
+
     public: 
         Wordlist(){} //default list constructor
 
@@ -274,12 +341,9 @@ class Wordlist : public Wordlist_base
             
             std::string word_;
             ifstream file_(file_name); //opens the file given in .cpp file  or terminal
-            int count = 0;
             if(file_.is_open()){
                 while(file_ >> word_){ // loops thorugh each word in file and saves to local variable
-                    cout<<"Word: "<<word_<<endl;
                     add_word(word_);   // calls function that adds word to LL
-                    count++;
                  }
                 file_.close();
             }
@@ -287,6 +351,7 @@ class Wordlist : public Wordlist_base
                 cerr << "Error opening file: " << file_name << endl;
             }
         }
+
 
         ~Wordlist(){
             deallocate(root);
@@ -308,6 +373,8 @@ class Wordlist : public Wordlist_base
             }
             return 0;
         }
+
+        
 
         int num_different_words()const{
             return totalNodes(root);
