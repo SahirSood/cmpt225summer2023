@@ -18,9 +18,8 @@
 //
 void test_read()
 {
-    Wordlist lst("small.txt");
+    Wordlist lst("tiny_shakespeare.txt");
     string w;
-    cout<<"list created"<<endl;
     
     // while (cin >> w)
     // {
@@ -45,5 +44,6 @@ void test_wordlist()
 int main()
 {
     cout << "Welcome to assignment 5!\n";
+    
     test_read();
 }

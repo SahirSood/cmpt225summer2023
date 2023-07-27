@@ -63,172 +63,188 @@ class Wordlist : public Wordlist_base
 
     Node *root = nullptr;
 
-    //Helper Function that returns the height of a given node
-    int height(Node* t)
-    {
-        return (t == NULL ? -1 : t->height);
-    }
-    
-    //Balancing Functions
-    //Calculates the difference in heights of subtrees to see if BST is balanced
-    //returns value of left subtree height - right subtree height to find difference
-    int bf(Node* p){
-        //Returns differnce if there is 2 subtees
+    //Function to calculate the height of a passed node
+    int calheight(Node *p){
+        //When both left and righ subtrees exists we return a height of the greater subtree + 1
         if(p->left && p->right){
-            return p->left->height - p->right->height;
+            if (p->left->height < p->right->height)
+                return p->right->height + 1;
+            else return  p->left->height + 1;
         }
-        //When both subtrees not avaialable returns the height of the tree that is available
-        else if(p->right && p->left == nullptr){
-            return p->right->height;
+
+        //When either the left or the right subtree does not exist we return the height of the subtree that exits + 1
+        else if(p->left && p->right == NULL){
+            return p->left->height + 1;
         }
-        else if(p->left && p->right == nullptr){
-            return p->left->height;
+        else if(p->left ==NULL && p->right){
+            return p->right->height + 1;
         }
+        //Will never reach this return
+        return 0;
+
+        }
+
+    //Function to calculate the neccicity of balancing
+    //Balancing Function
+    int bf(Node *n){
+        //When both subtrees exits we return the diffrence in heights
+        if(n->left && n->right){
+            return n->left->height - n->right->height; 
+        }
+        //When either the left or the right subtree does not exist we return the height of the subtree that exit
+        else if(n->left){
+            return n->left->height; 
+        }
+        else if(n->right ){
+            return -n->right->height;
+        }
+        //Will never reach this return
         return 0;
     }
 
-    // Right-Right Rotation
-    // This function performs a rotation to balance the tree when the right subtree
-    // of a node becomes taller than its left subtree. 
-    Node* rrrotation(Node* &t)
-    {
-        cout<<"Enters rrr:"<<endl;
-        // Store the left child of the original node t in a variable u
-        Node* u = t->left;
+    //Left Left Rotation
+    //When a node is inserted at the left child of hte left subtree of the unbalanced node
+    Node * llrotation(Node *n){
+        Node *p;
+        Node *tp;
+
+        //set node equal to unbalced node
+        p = n;
+        //Node set to left subtree
+        tp = p->left;
+        //left subtree of unbalnced node is set to right subtree of tp
+        p->left = tp->right;
+        //right subtree of tp is set to old unbalnced node
+        tp->right = p;
+
+        return tp; 
+    }
+
+    //Right Right Rotation
+    //When a node is inserted at the right child of hte right subtree of the unbalanced node
+    Node * rrrotation(Node *n){
+        Node *p;
+        Node *tp;
+        //set node equal to unbalced node
+        p = n;
+        //Node set to right subtree
+        tp = p->right;
+        //right subtree of unbalned node is set to left subtree of tp
+        p->right = tp->left;
+        //left subtree of tp is set to old  unbalanced node
+        tp->left = p;
+
+        return tp; 
+    }
+
+    //right left rotation
+    // when a new node is inserted at the right child of the left subtree
+    Node * rlrotation(Node *n){
+        Node *p;
+        Node *tp;
+        Node *tp2;
+        //set node equal to unbalced node
+        p = n;
+        //Node set to right subtree
+        tp = p->right;
+        //node set to left node of right subtree
+        tp2 =p->right->left;
+        //new right subtree of unbalanced node set to left subtree of 'bottom node'
+        p -> right = tp2->left;
+        //'middle node' left subtree set to right subtree of'bottom node'
+        tp ->left = tp2->right;
+        //tp2 becomes 'top node' with left subtree equal to old unbalanced node with new subtrees
+        // and right subtree set to 'niddle node' with new subtrees
+        tp2 ->left = p;
+        tp2->right = tp; 
         
-        // Move the right child of u to be the left child of t
-        t->left = u->right;
+        return tp2; 
+    }
 
-        // Perform the rotation by making u the new root of the subtree
-        u->right = t;
-
-        // Update the heights of t and u
-        t->height = max(height(t->left), height(t->right)) + 1;
-        u->height = max(height(u->left), t->height) + 1;
+    //Left Right Subtree
+    //when a new node is inserted at the left child of the right subtree
+    Node * lrrotation(Node *n){
+        Node *p;
+        Node *tp;
+        Node *tp2;
+        //set node equal to unbalced node
+        p = n;
+        //Node set to left subtree
+        tp = p->left;
+        //node set to right node of left subtree
+        tp2 =p->left->right;
+        //new left subtree of unbalanced node set to right subtree of 'bottom node'
+        p -> left = tp2->right;
+        //'middle node' right subtree set to left subtree of'bottom node'
+        tp ->right = tp2->left;
+        //tp2 becomes 'top node' with right subtree equal to old unbalanced node with new subtrees
+        // and left subtree set to 'middle node' with new subtrees
+        tp2 ->right = p;
+        tp2->left = tp; 
         
-        // Return the new root of the subtree u
-        return u;
+        return tp2; 
     }
 
-    // Left-Left Rotation
-    // This function performs a rotation to balance the tree when the left subtree
-    // of a node becomes taller than its right subtree. 
-    Node* llrotation(Node* &t)
-    {
-        // Store the right child of the original node t in a variable u
-        Node* u = t->right;
+    //function that inserts a given value inthe avl tree
+    //Recusrively
+    Node* insert(Node *r,string data){
+        //If the current node is null we create a new node
+        //height set to 0 since it will be a leaf or root node
+        //count set to 1 since it will be first instance of node in tree
+        if(r==NULL){
+            Node *n;
+            n = new Node;
+            n->word = data;
+            r = n;
+            r->left = r->right = NULL;
+            r->height = 0; 
+            r->count=1;
+            return r;             
+        }
+        else{
+            //Data is alphabetically smaller than the current node we know
+            //According to BST properties it goes in the left subtree so we
+            //Recursively call insert on left node
+            if(data < r->word)
+                r->left = insert(r->left,data);
+            //If alphabetically greater we do the same on the right subtree
+            else if(data>r->word)
+                r->right = insert(r->right,data);
+            //When Data is equal to current node we simply increment the count variable of the node
+            else
+                r->count++;
 
-        // Move the left child of u to be the right child of t
-        t->right = u->left;
-
-        // Perform the rotation by making u the new root of the subtree
-        u->left = t;
-
-        // Update the heights of t and u
-        t->height = max(height(t->left), height(t->right)) + 1;
-        u->height = max(height(t->right), t->height) + 1;
-        
-        // Return the new root of the subtree u
-        return u;
-    }
-
-    // Left-Right-Left Rotation
-    // This function performs two rotations to balance the tree when a node's left subtree
-    // is taller than its right subtree, and the left child's right subtree is taller than
-    // its left subtree. 
-    Node* lrlrotation(Node* &t)
-    {
-        cout<<"Enters lrl:"<<endl;
-        // Perform a Right-Right rotation on the right subtree of the original node t
-        t->right = rrrotation(t->right);
-
-        // Perform a Left-Left rotation on the original node t
-        return llrotation(t);
-    }
-
-    // Right-Left-Right Rotation
-    // This function performs two rotations to balance the tree when a node's right subtree
-    // is taller than its left subtree, and the right child's left subtree is taller than
-    // its right subtree. 
-    Node* rlrrotation(Node* &t)
-    {
-        cout<<"Enters rlr:"<<endl;
-        // Perform a Left-Left rotation on the left subtree of the original node t
-        t->left = llrotation(t->left);
-
-        // Perform a Right-Right rotation on the original node t
-        return rrrotation(t);
-    }
-
-
-        // Inserts a given string into the AVL tree
-    // The function first adds the word to the binary search tree (BST) normally, following
-    // the properties of a BST. Then it balances the tree to ensure it maintains the AVL
-    Node* insert(Node* t, string x)
-    {
-        // Base Case
-        // If we reach a node (null), we create a new node with the value x and update
-        // its height to 0 (since it will be a leaf node). 'count' is also set to 1 since
-        // it is a unique value in the tree.
-        if (t == NULL)
-        {
-            t = new Node;
-            t->word = x;
-            t->height = 0;
-            t->left = t->right = NULL;
-            t->count = 1;
         }
 
-        // If the node is not null, we look for the appropriate place to insert the new node.
-        // Based on the properties of a BST:
-        else if (x < t->word)
-        {
-            t->left = insert(t->left, x);
+        //Calculate the height of the added node
+        r->height = calheight(r);
+
+
+        //If node is left subtree heavy and the subtree is also left heavy
+        //We call a Left Left Rotation
+        if(bf(r)==2 && bf(r->left)==1){
+            r = llrotation(r);
+        }
+        //If node is right subtree heavy and the subtree is also right heavy
+        //We call a Right Right Rotation
+        else if(bf(r)==-2 && bf(r->right)==-1){
+            r = rrrotation(r);
+        }
+        //If node is right subtree heavy and the subtree is left heavy
+        //We call a Right Left Rotation
+        else if(bf(r)==-2 && bf(r->right)==1){
+            r = rlrotation(r);
             
-            // After inserting the new node, we check if a rotation needs to be done to balance the tree.
-            // The 'bf' function (which calculates the balance factor) is used to check if the AVL property is violated
-            //height differences must be less than 2
-
-            if (bf(t) == 2)
-            {
-                // If the newly inserted value is in the left subtree of the current node, we perform a
-                // Right-Right rotation (rrrotation) on the current node.
-                if (x < t->left->word)
-                    t = rrrotation(t);
-                // Otherwise, we perform a Right-Left-Right rotation (rlrrotation) on the current node.
-                else
-                    t = rlrrotation(t);
-            }
         }
-        else if (x > t->word)
-        {
-            t->right = insert(t->right, x);
+        //If node is left subtree heavy and the subtree is also right heavy
+        //We call a Left Right Rotation
+        else if(bf(r)==2 && bf(r->left)==-1){
+            r = lrrotation(r);
+        }        
 
-            // After inserting the new node, we check if a rotation needs to be done to balance the tree.
-            // The 'bf' function is used to check if the AVL property is violated at this node (bf(t) == 2
-            // indicates the right subtree is taller by more than 1).
-            if (bf(t) == 2)
-            {
-                // If the newly inserted value is in the right subtree of the current node, we perform a
-                // Left-Left rotation (llrotation) on the current node.
-                if (x > t->right->word)
-                    t = llrotation(t);
-                // Otherwise, we perform a Left-Right-Left rotation (lrlrotation) on the current node.
-                else
-                    t = lrlrotation(t);
-            }
-        }
-        else
-        {
-            // If the value already exists in the tree we increment count variable.
-            t->count++;
-        }
+        return r;
 
-        // Update the height of the current node based on the heights of its left and right subtrees.
-        // Then, return the updated node.
-        t->height = max(height(t->left), height(t->right)) + 1;
-        return t;
-    }
+        }
 
     //Returns total number of nodes in a BST or AVL tree
     int totalNodes(Node* n)const{
@@ -286,32 +302,45 @@ class Wordlist : public Wordlist_base
         return is_sort_helper(n->left) && is_sort_helper(n->right);
     }
 
-    
+    //Hekper functino that looks for the most frequent node updates the pointers
+    //tracking the count and word of the most frequent
     void most_frequent_helper(string* word, int* max, Node* n)const{
+        //Base Case
         if(n == nullptr){
             return;
         }
+        //Calls itself on left subtree
+        //(INORDER TRAVERSAL)
         most_frequent_helper(word, max, n->left);
+
+        //Updates Varaibles if the count is greater than previously known
+        //"most common" word
 
         if(n->count > *max){
             *word = n->word;
             *max = n->count;
         }
-
+        //Calls itself on right subtree
         most_frequent_helper(word, max, n->right);
     }
 
+    //Heler that returns the total number of nodes in the AVL tree
     int number_of_singletons_helper(Node* n)const{
+        //Base Case
         if(n==nullptr){
             return 0;
         }
+        //Returns The left and right subtree while adding 1 for each node visited
         if(n->count == 1){
             return 1 + number_of_singletons_helper(n->left) + number_of_singletons_helper(n->right);
         }
+        //when count is greater than 1 we dont add 1 to the return value but call left and right subtree
         return number_of_singletons_helper(n->left) + number_of_singletons_helper(n->right);
     }
 
+    //Prints the values of the nodes using inorder traversal
     void in_order_print(Node* n)const{
+        //Base Case
         if(n==nullptr){
             return;
         }
@@ -321,14 +350,18 @@ class Wordlist : public Wordlist_base
         in_order_print(n->right);
     }
 
+    //Checks if the AVL tree contains a given word
     bool lst_contains(Node*n, string x)const{
+        //Base Case
         if(n==nullptr){
             return false;
         }
+        //If we find the word we return true
         if(n->word == x){
             return true;
         }
-        if (n->left || n->right)
+        //When either the left or right subtree returns true then the bst has word
+        if (lst_contains(n->left,x) || lst_contains(n->right,x))
         {
             return true;
         }
@@ -338,8 +371,8 @@ class Wordlist : public Wordlist_base
     public: 
         Wordlist(){} //default list constructor
 
+        //Constructor that add all words from a file to our AVL tree
         Wordlist(string file_name){
-            
             std::string word_;
             ifstream file_(file_name); //opens the file given in .cpp file  or terminal
             if(file_.is_open()){
@@ -354,63 +387,79 @@ class Wordlist : public Wordlist_base
             }
         }
 
-
+        //destructor that empties the entire AVL tree when the code ends
         ~Wordlist(){
             deallocate(root);
         }
 
+        //Function that gets total count of how many times a word appears in the list
+        //count of node with the word as value
         int get_count(const string&w)const{
             Node* cur = root;
             while(cur!=nullptr){
+                //when we find the node we return the count
                 if(cur->word==w){
                     return cur->count;
                 }
+                //if word is less than our current node we know it will be in the left subtree
                 else if (cur->word>w)
                 {
                     cur = cur->left;
                 }
+                //if word is greater than our current node we know it will be in the right subtree
                 else if(cur->word<w){
                     cur = cur->right;
                 }
             }
+            //Word not  found we return 0
             return 0;
         }
 
         
-
+        //Returns the number of Unique words in the AVL tree
         int num_different_words()const{
             return totalNodes(root);
         }
-
+        //Returns Total number of words(does not need to be unique)
         int total_words()const{
             return totalWords(root);
         }
-
+        //Checks if the AVL tree has BST properties
         bool is_sorted()const{
             return is_sort_helper(root);
         }
 
-        string most_frequent()const{
-            string max;
-            int max_num;
-            
-            most_frequent_helper(&max,&max_num,root);
+        //returns a string of the word that appears most frequent and its count
+        string most_frequent() const {
+            string max_word;
+            int max_count = 0;
 
-            return max;
+            most_frequent_helper(&max_word, &max_count, root);
+
+            // Check if any word was found and return the appropriate result
+            if (max_count > 0) {
+                string ret = max_word + " " + to_string(max_count);
+                return ret;
+            } else {
+                return "No elements in the data structure.";
+            }
         }
 
+
+        //Returns number of words that appear only once
         int num_singletons()const{
             return number_of_singletons_helper(root);
         }
 
+        //Function that adds a word to AVL tree
         void add_word(const string &w){
             root = insert(root,w);
         }
 
+        //Prints the words in the AVL tree in alphabetical order
         void print_words()const{
             in_order_print(root);
         }
-
     
     //
     // IMPORTANT: root is the only variable that can be defined in this class.
