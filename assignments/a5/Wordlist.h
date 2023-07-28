@@ -339,15 +339,15 @@ class Wordlist : public Wordlist_base
     }
 
     //Prints the values of the nodes using inorder traversal
-    void in_order_print(Node* n)const{
+    void in_order_print(Node* n, int* counter)const{
         //Base Case
         if(n==nullptr){
             return;
         }
 
-        in_order_print(n->left);
-        cout<<"{\""<<n->word<<"\", "<<n->count<<"}"<<endl;
-        in_order_print(n->right);
+        in_order_print(n->left,counter);
+        cout<<(*counter)++<<".{\""<<n->word<<"\", "<<n->count<<"}"<<endl;
+        in_order_print(n->right,counter);
     }
 
     //Checks if the AVL tree contains a given word
@@ -458,7 +458,8 @@ class Wordlist : public Wordlist_base
 
         //Prints the words in the AVL tree in alphabetical order
         void print_words()const{
-            in_order_print(root);
+            int count = 1;
+            in_order_print(root, &count);
         }
     
     //
